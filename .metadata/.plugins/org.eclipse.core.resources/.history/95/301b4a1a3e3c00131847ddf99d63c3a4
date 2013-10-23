@@ -171,9 +171,7 @@ public class GUI_DataEntry {
 				int index  = categoryList.getSelectedIndex();
 				String categoryVal = category.getText();
 	        	ArrayList<ReplaceableItem> data = new ArrayList<ReplaceableItem>();
-	        	
-	        	System.out.println(word + frequency + imageability + categoryVal);
-/*
+
 				String selectExpression = "select * from `" + "mossWordsDemo" + "` where Category = '"+categoryList.getSelectedIndex()+1+"' ";
 		        System.out.println("Selecting: " + selectExpression + "\n");
 		        SelectRequest selectRequest = new SelectRequest(selectExpression);
@@ -185,7 +183,7 @@ public class GUI_DataEntry {
 		        		frame.dispose();
 		        		new JFrame();
 		        	}
-		       */ 	
+		        	
 		        	data.add(new ReplaceableItem(word).withAttributes(
 		   			 new ReplaceableAttribute("Category", categoryVal, true),
 			               new ReplaceableAttribute("Length", Integer.toString(word.length()), true),
@@ -195,12 +193,11 @@ public class GUI_DataEntry {
 					
 					sdb.batchPutAttributes(new BatchPutAttributesRequest("mossWordsDemo",data));
 		        }
-		}
-		);
 		        
 		        	
 				//(word,frequencyList.)
-			
+			}
+		});
 		
 	}
 

@@ -47,8 +47,8 @@ public class GUI_DataEntry {
     private JLabel lblImageability;
     private JFileChooser jfc;
     private JButton btnUploadImage;
+    private JButton btnChangeDifficultyFunction;
     private ArrayList<String> categories;
-    private JTextField category;
 	/**
 	 * Launch the application.
 	 */
@@ -85,7 +85,7 @@ public class GUI_DataEntry {
 		}
 
 		frame = new JFrame();
-		frame.setBounds(100, 100, 387, 332);
+		frame.setBounds(100, 100, 510, 330);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -119,10 +119,10 @@ public class GUI_DataEntry {
 		frame.getContentPane().add(lblImageability);
 		
 		categoryList = new JComboBox();
-        String selectExpression = "select * from `" + "mossWordsDemo" + "`";
+        String selectExpression = "select * from `" + "mossWords" + "`";
         System.out.println("Selecting: " + selectExpression + "\n");
         SelectRequest selectRequest = new SelectRequest(selectExpression);
-/*
+
         categories=new ArrayList<String>();
         for(Item item: sdb.select(selectRequest).getItems()) {
         	for(Attribute attribute: item.getAttributes()) {
@@ -133,14 +133,16 @@ public class GUI_DataEntry {
         }
         
 		categoryList.setBounds(161, 127, 160, 30);
-		frame.getContentPane().add(categoryList);  */
+		frame.getContentPane().add(categoryList);
 		
-
+		btnChangeDifficultyFunction = new JButton("Change Difficulty Function");
+		btnChangeDifficultyFunction.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		
-		category = new JTextField();
-		category.setBounds(161, 127, 134, 28);
-		frame.getContentPane().add(category);
-		category.setColumns(10);
+		btnChangeDifficultyFunction.setBounds(301, 243, 188, 21);
+		frame.getContentPane().add(btnChangeDifficultyFunction);
 		
 		imageName = new JTextField();
 		imageName.setBounds(163, 40, 146, 28);
@@ -160,21 +162,16 @@ public class GUI_DataEntry {
 		frame.getContentPane().add(imageabilityList);
 		
 		btnUploadImage = new JButton("Upload Image");
-        btnUploadImage.setBounds(116, 261, 117, 29);
-		frame.getContentPane().add(btnUploadImage);
-		
 		btnUploadImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String word = imageName.getText();
 				String frequency = Integer.toString(frequencyList.getSelectedIndex()+1);
 				String imageability = Integer.toString(imageabilityList.getSelectedIndex()+1);
 				int index  = categoryList.getSelectedIndex();
-				String categoryVal = category.getText();
+				String category = categories.get(index);
 	        	ArrayList<ReplaceableItem> data = new ArrayList<ReplaceableItem>();
-	        	
-	        	System.out.println(word + frequency + imageability + categoryVal);
-/*
-				String selectExpression = "select * from `" + "mossWordsDemo" + "` where Category = '"+categoryList.getSelectedIndex()+1+"' ";
+
+				String selectExpression = "select * from `" + "mossWords" + "` where Category = '"+categoryList.getSelectedIndex()+1+"' ";
 		        System.out.println("Selecting: " + selectExpression + "\n");
 		        SelectRequest selectRequest = new SelectRequest(selectExpression);
 		        
@@ -185,32 +182,31 @@ public class GUI_DataEntry {
 		        		frame.dispose();
 		        		new JFrame();
 		        	}
-		       */ 	
 		        	data.add(new ReplaceableItem(word).withAttributes(
-		   			 new ReplaceableAttribute("Category", categoryVal, true),
+		   			 new ReplaceableAttribute("Category", category, true),
 			               new ReplaceableAttribute("Length", Integer.toString(word.length()), true),
 			               new ReplaceableAttribute("frequency", frequency, true),
 			               new ReplaceableAttribute("Imageability", imageability, true),
-			               new ReplaceableAttribute("url", "https://s3.amazonaws.com/mo.jpg", true)));
+			               new ReplaceableAttribute("url", uploadImageToS3(), true)));
 					
-					sdb.batchPutAttributes(new BatchPutAttributesRequest("mossWordsDemo",data));
+					sdb.batchPutAttributes(new BatchPutAttributesRequest("mossWords",data));
 		        }
-		}
-		);
 		        
 		        	
 				//(word,frequencyList.)
-			
-		
+			}
+		});
+		btnUploadImage.setBounds(116, 261, 117, 29);
+		frame.getContentPane().add(btnUploadImage);
 	}
 
 	protected String uploadImageToS3() {
 		String url=null;
 		String existingBucketName = "<your Bucket Name>";
 		String keyName = imageName+".JPG";  
-		File f = jfc.getSelectedFile();
-		String filePath=f.getAbsolutePath();
-		String amazonFileUploadLocationOriginal=existingBucketName+"/";
+		  File f = jfc.getSelectedFile();
+		  String filePath=f.getAbsolutePath();
+		  String amazonFileUploadLocationOriginal=existingBucketName+"/";
 		  
 		AmazonS3 s3Client;
 		try {

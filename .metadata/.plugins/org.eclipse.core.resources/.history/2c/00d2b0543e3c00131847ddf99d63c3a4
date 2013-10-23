@@ -171,8 +171,6 @@ public class GUI_DataEntry {
 				int index  = categoryList.getSelectedIndex();
 				String categoryVal = category.getText();
 	        	ArrayList<ReplaceableItem> data = new ArrayList<ReplaceableItem>();
-	        	
-	        	System.out.println(word + frequency + imageability + categoryVal);
 /*
 				String selectExpression = "select * from `" + "mossWordsDemo" + "` where Category = '"+categoryList.getSelectedIndex()+1+"' ";
 		        System.out.println("Selecting: " + selectExpression + "\n");

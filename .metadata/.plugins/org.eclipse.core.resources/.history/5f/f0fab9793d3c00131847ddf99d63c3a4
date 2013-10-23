@@ -135,7 +135,8 @@ public class GUI_DataEntry {
 		categoryList.setBounds(161, 127, 160, 30);
 		frame.getContentPane().add(categoryList);  */
 		
-
+        btnUploadImage.setBounds(116, 261, 117, 29);
+		frame.getContentPane().add(btnUploadImage);
 		
 		category = new JTextField();
 		category.setBounds(161, 127, 134, 28);
@@ -160,20 +161,15 @@ public class GUI_DataEntry {
 		frame.getContentPane().add(imageabilityList);
 		
 		btnUploadImage = new JButton("Upload Image");
-        btnUploadImage.setBounds(116, 261, 117, 29);
-		frame.getContentPane().add(btnUploadImage);
-		
 		btnUploadImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String word = imageName.getText();
 				String frequency = Integer.toString(frequencyList.getSelectedIndex()+1);
 				String imageability = Integer.toString(imageabilityList.getSelectedIndex()+1);
 				int index  = categoryList.getSelectedIndex();
-				String categoryVal = category.getText();
+				String category = categories.get(index);
 	        	ArrayList<ReplaceableItem> data = new ArrayList<ReplaceableItem>();
-	        	
-	        	System.out.println(word + frequency + imageability + categoryVal);
-/*
+
 				String selectExpression = "select * from `" + "mossWordsDemo" + "` where Category = '"+categoryList.getSelectedIndex()+1+"' ";
 		        System.out.println("Selecting: " + selectExpression + "\n");
 		        SelectRequest selectRequest = new SelectRequest(selectExpression);
@@ -185,9 +181,8 @@ public class GUI_DataEntry {
 		        		frame.dispose();
 		        		new JFrame();
 		        	}
-		       */ 	
 		        	data.add(new ReplaceableItem(word).withAttributes(
-		   			 new ReplaceableAttribute("Category", categoryVal, true),
+		   			 new ReplaceableAttribute("Category", category, true),
 			               new ReplaceableAttribute("Length", Integer.toString(word.length()), true),
 			               new ReplaceableAttribute("frequency", frequency, true),
 			               new ReplaceableAttribute("Imageability", imageability, true),
@@ -195,12 +190,11 @@ public class GUI_DataEntry {
 					
 					sdb.batchPutAttributes(new BatchPutAttributesRequest("mossWordsDemo",data));
 		        }
-		}
-		);
 		        
 		        	
 				//(word,frequencyList.)
-			
+			}
+		});
 		
 	}
 
