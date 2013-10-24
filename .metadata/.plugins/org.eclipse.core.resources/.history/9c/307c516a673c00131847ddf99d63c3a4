@@ -56,7 +56,7 @@ public class GUI_DataEntry {
     private JButton btnUploadImage;
     private ArrayList<String> categories;
     private JTextField category;
-    private FileChooser fcp;
+    private TestFileChooser2 fcp;
     public String url;
 
 	/**
@@ -90,7 +90,7 @@ public class GUI_DataEntry {
 		
         try {
 			sdb = new AmazonSimpleDBClient(new PropertiesCredentials(
-			        GUI_DataEntry.class.getResourceAsStream("AwsCredentials.properties")));
+			        Images_SDB.class.getResourceAsStream("AwsCredentials.properties")));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -118,7 +118,7 @@ public class GUI_DataEntry {
 			public void actionPerformed(ActionEvent e) {
 				
 					filePathOnly fpo = new filePathOnly();
-					fcp = new FileChooser(fpo);
+					fcp = new TestFileChooser2(fpo);
 				    String filePath = fpo.getFilePath();
 					System.out.println(filePath);
 					
@@ -143,7 +143,7 @@ public class GUI_DataEntry {
 		frame.getContentPane().add(lblImageability);
 		
 		categoryList = new JComboBox();
-        String selectExpression = "select * from `" + "mossWords" + "`";
+        String selectExpression = "select * from `" + "mossWordsDemo" + "`";
         System.out.println("Selecting: " + selectExpression + "\n");
         SelectRequest selectRequest = new SelectRequest(selectExpression);
 /*
@@ -187,7 +187,6 @@ public class GUI_DataEntry {
         btnUploadImage.setBounds(116, 261, 117, 29);
 		frame.getContentPane().add(btnUploadImage);
 		
-		
 		btnUploadImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String word = imageName.getText();
@@ -206,7 +205,7 @@ public class GUI_DataEntry {
 			               new ReplaceableAttribute("Imageability", imageability, true),
 			               new ReplaceableAttribute("url", uploadImageToS3(), true)));
 					
-					sdb.batchPutAttributes(new BatchPutAttributesRequest("mossWords",data));
+					sdb.batchPutAttributes(new BatchPutAttributesRequest("mossWordsDemo",data));
 					
 					imageName.setText("");
 					category.setText("");
@@ -230,7 +229,7 @@ public class GUI_DataEntry {
 		AmazonS3 s3Client;
 		try {
 			s3Client = new AmazonS3Client(new PropertiesCredentials(
-			            GUI_DataEntry.class.getResourceAsStream("AwsCredentials.properties")));
+			            Images_SDB.class.getResourceAsStream("AwsCredentials.properties")));
 
 		  FileInputStream stream = new FileInputStream(filePath);
 		  ObjectMetadata objectMetadata = new ObjectMetadata();

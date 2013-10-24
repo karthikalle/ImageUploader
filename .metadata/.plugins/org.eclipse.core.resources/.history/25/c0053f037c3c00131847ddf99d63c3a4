@@ -187,7 +187,6 @@ public class GUI_DataEntry {
         btnUploadImage.setBounds(116, 261, 117, 29);
 		frame.getContentPane().add(btnUploadImage);
 		
-		
 		btnUploadImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String word = imageName.getText();

@@ -56,7 +56,7 @@ public class GUI_DataEntry {
     private JButton btnUploadImage;
     private ArrayList<String> categories;
     private JTextField category;
-    private FileChooser fcp;
+    private TestFileChooser2 fcp;
     public String url;
 
 	/**
@@ -90,7 +90,7 @@ public class GUI_DataEntry {
 		
         try {
 			sdb = new AmazonSimpleDBClient(new PropertiesCredentials(
-			        GUI_DataEntry.class.getResourceAsStream("AwsCredentials.properties")));
+			        Images_SDB.class.getResourceAsStream("AwsCredentials.properties")));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -118,7 +118,7 @@ public class GUI_DataEntry {
 			public void actionPerformed(ActionEvent e) {
 				
 					filePathOnly fpo = new filePathOnly();
-					fcp = new FileChooser(fpo);
+					fcp = new TestFileChooser2(fpo);
 				    String filePath = fpo.getFilePath();
 					System.out.println(filePath);
 					
@@ -186,7 +186,6 @@ public class GUI_DataEntry {
 		btnUploadImage = new JButton("Upload Image");
         btnUploadImage.setBounds(116, 261, 117, 29);
 		frame.getContentPane().add(btnUploadImage);
-		
 		
 		btnUploadImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

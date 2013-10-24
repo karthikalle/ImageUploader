@@ -212,6 +212,7 @@ public class GUI_DataEntry {
 					category.setText("");
 					frequencyList.setSelectedIndex(0);
 					imageabilityList.setSelectedIndex(0);
+					fileChooser.setText("Browse..");
 			}
 				
 		}
