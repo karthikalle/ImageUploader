@@ -110,6 +110,7 @@ public class GUI_DataEntry {
 		fileChooser = new JButton("browse");
 		fileChooser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+					
 				    fcp = new TestFileChooser2();
 				    String filePath = fcp.getFilePath();
 					System.out.println(filePath);

@@ -78,7 +78,7 @@ public class TestFileChooser2 {
             fileField = new JTextField(10);
             filePane.add(fileField, gbc);
             
- /*           JButton closeButton = new JButton("Exit");
+            JButton closeButton = new JButton("Exit");
             
             closeButton.addActionListener(new ActionListener() {
     			public void actionPerformed(ActionEvent e) {
@@ -88,9 +88,8 @@ public class TestFileChooser2 {
             });
             
             closeButton.setBounds(100, 100, 25, 20);
-            filePane.add(closeButton); */
-            
-            add(filePane); 
+            filePane.add(closeButton);
+            add(filePane);
             
             if(fileChooser.showSaveDialog(this)== JFileChooser.APPROVE_OPTION)
             	System.out.println(filePath);

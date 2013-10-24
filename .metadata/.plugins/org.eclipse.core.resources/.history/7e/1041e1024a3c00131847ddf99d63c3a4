@@ -78,25 +78,18 @@ public class TestFileChooser2 {
             fileField = new JTextField(10);
             filePane.add(fileField, gbc);
             
- /*           JButton closeButton = new JButton("Exit");
+            JButton closeButton = new JButton("Exit");
             
             closeButton.addActionListener(new ActionListener() {
     			public void actionPerformed(ActionEvent e) {
-    				filePath = fileField.getText();
     				filePane.setVisible(false);
     			}
             });
             
             closeButton.setBounds(100, 100, 25, 20);
-            filePane.add(closeButton); */
+            filePane.add(closeButton);
+            add(filePane);
             
-            add(filePane); 
-            
-            if(fileChooser.showSaveDialog(this)== JFileChooser.APPROVE_OPTION)
-            	System.out.println(filePath);
-            else if(fileChooser.showSaveDialog(this)== JFileChooser.CANCEL_OPTION)
-            	System.out.println("Cancelled");
-            	
         }
 
         protected void setFile(File file) {
@@ -109,6 +102,6 @@ public class TestFileChooser2 {
     }
 
 	public String getFilePath() {
-		return this.filePath;
+		return filePath;
 	}
 }
