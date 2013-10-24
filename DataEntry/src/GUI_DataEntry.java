@@ -1,7 +1,12 @@
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,6 +35,7 @@ import com.amazonaws.services.simpledb.model.Item;
 import com.amazonaws.services.simpledb.model.ReplaceableAttribute;
 import com.amazonaws.services.simpledb.model.ReplaceableItem;
 import com.amazonaws.services.simpledb.model.SelectRequest;
+
 import javax.swing.JPanel;
 
 public class GUI_DataEntry {
@@ -51,7 +57,7 @@ public class GUI_DataEntry {
     private ArrayList<String> categories;
     private JTextField category;
     private TestFileChooser2 fcp;
-    private String url;
+    public String url;
 
 	/**
 	 * Launch the application.
@@ -110,9 +116,12 @@ public class GUI_DataEntry {
 		fileChooser = new JButton("browse");
 		fileChooser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				    fcp = new TestFileChooser2();
-				    String filePath = fcp.getFilePath();
+				
+					filePathOnly fpo = new filePathOnly();
+					fcp = new TestFileChooser2(fpo);
+				    String filePath = fpo.getFilePath();
 					System.out.println(filePath);
+					
 		        }
 		}
 		);
@@ -200,15 +209,17 @@ public class GUI_DataEntry {
 		        		frame.dispose();
 		        		new JFrame();
 		        	}
-		       */ 	
+		        	*/
+	        	
 		        	data.add(new ReplaceableItem(word).withAttributes(
 		   			 new ReplaceableAttribute("Category", categoryVal, true),
 			               new ReplaceableAttribute("Length", Integer.toString(word.length()), true),
 			               new ReplaceableAttribute("frequency", frequency, true),
 			               new ReplaceableAttribute("Imageability", imageability, true),
-			               new ReplaceableAttribute("url", "https://s3.amazonaws.com/mo.jpg", true)));
+			               new ReplaceableAttribute("url", uploadImageToS3(), true)));
 					
 					sdb.batchPutAttributes(new BatchPutAttributesRequest("mossWordsDemo",data));
+					
 		        }
 		}
 		);
@@ -218,11 +229,15 @@ public class GUI_DataEntry {
 
 	protected String uploadImageToS3() {
 		String existingBucketName = "mosswords";
-		String keyName = imageName+".JPG";  
+		String keyName = imageName.getText()+".jpg";  
 		String filePath = fcp.getFilePath();
 		
-		String amazonFileUploadLocationOriginal=existingBucketName+"/";
-		  
+		
+
+	//	System.out.println(filePath+"in a diff");
+		String amazonFileUploadLocationOriginal=existingBucketName+"/"+category.getText();
+	
+		
 		AmazonS3 s3Client;
 		try {
 			s3Client = new AmazonS3Client(new PropertiesCredentials(
@@ -230,7 +245,13 @@ public class GUI_DataEntry {
 
 		  FileInputStream stream = new FileInputStream(filePath);
 		  ObjectMetadata objectMetadata = new ObjectMetadata();
+		  
+		  
+		  objectMetadata.setContentType("image/jpeg");
+		  System.out.println("ObjectMetadata content type: "+objectMetadata.getContentType());
+	//	  PutObjectRequest putObjectRequest = new PutObjectRequest(amazonFileUploadLocationOriginal, keyName, stream, objectMetadata);
 		  PutObjectRequest putObjectRequest = new PutObjectRequest(amazonFileUploadLocationOriginal, keyName, stream, objectMetadata);
+		  putObjectRequest.setInputStream(stream);
 		  PutObjectResult result = s3Client.putObject(putObjectRequest);
 		  System.out.println("Etag:" + result.getETag() + "-->" + result);
 		  
@@ -238,7 +259,12 @@ public class GUI_DataEntry {
 		catch (IOException e) {
 				e.printStackTrace();
 			}
-		 
+		 url=amazonFileUploadLocationOriginal+"/"+keyName;
+		 System.out.println("KeyName: "+keyName);
+		 System.out.println("filePath: "+filePath);
+		 System.out.println("amazonFileUploadLocationOriginal: "+amazonFileUploadLocationOriginal);
+		 System.out.println("URL: "+url);
+			
 		return url;
 	}
 }
