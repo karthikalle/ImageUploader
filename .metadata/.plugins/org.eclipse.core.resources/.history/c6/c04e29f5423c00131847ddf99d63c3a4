@@ -1,0 +1,13 @@
+import javax.swing.JPanel;
+
+
+public class FileChooserPanel extends JPanel {
+
+	/**
+	 * Create the panel.
+	 */
+	public FileChooserPanel() {
+
+	}
+
+}

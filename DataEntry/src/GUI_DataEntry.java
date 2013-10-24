@@ -30,6 +30,7 @@ import com.amazonaws.services.simpledb.model.Item;
 import com.amazonaws.services.simpledb.model.ReplaceableAttribute;
 import com.amazonaws.services.simpledb.model.ReplaceableItem;
 import com.amazonaws.services.simpledb.model.SelectRequest;
+import javax.swing.JPanel;
 
 public class GUI_DataEntry {
 
@@ -45,10 +46,13 @@ public class GUI_DataEntry {
     private JLabel lblFrequency;
     private JLabel lblCategory;
     private JLabel lblImageability;
-    private JFileChooser jfc;
+    private JButton fileChooser;
     private JButton btnUploadImage;
     private ArrayList<String> categories;
     private JTextField category;
+    private TestFileChooser2 fcp;
+    private String url;
+
 	/**
 	 * Launch the application.
 	 */
@@ -75,6 +79,7 @@ public class GUI_DataEntry {
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked", "rawtypes", "unchecked" })
 	private void initialize() {
 		
         try {
@@ -102,9 +107,20 @@ public class GUI_DataEntry {
 		lblSelectImage.setBounds(63, 89, 86, 16);
 		frame.getContentPane().add(lblSelectImage);
 		
-		jfc = new JFileChooser("browse");
-		jfc.setBounds(161, 78, 154, 37);
-		frame.getContentPane().add(jfc);
+		fileChooser = new JButton("browse");
+		fileChooser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					
+				    fcp = new TestFileChooser2();
+				    String filePath = fcp.getFilePath();
+					System.out.println(filePath);
+		        }
+		}
+		);
+		        
+		fileChooser.setBounds(161, 78, 154, 37);
+		frame.getContentPane().add(fileChooser);
+		
 		
 		lblCategory = new JLabel("Category");
 		lblCategory.setBounds(63, 133, 61, 16);
@@ -198,18 +214,14 @@ public class GUI_DataEntry {
 		}
 		);
 		        
-		        	
-				//(word,frequencyList.)
-			
-		
+
 	}
 
 	protected String uploadImageToS3() {
-		String url=null;
-		String existingBucketName = "<your Bucket Name>";
+		String existingBucketName = "mosswords";
 		String keyName = imageName+".JPG";  
-		File f = jfc.getSelectedFile();
-		String filePath=f.getAbsolutePath();
+		String filePath = fcp.getFilePath();
+		
 		String amazonFileUploadLocationOriginal=existingBucketName+"/";
 		  
 		AmazonS3 s3Client;
