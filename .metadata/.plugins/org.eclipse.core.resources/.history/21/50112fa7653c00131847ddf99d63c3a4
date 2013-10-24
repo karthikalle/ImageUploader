@@ -113,7 +113,7 @@ public class GUI_DataEntry {
 		lblSelectImage.setBounds(63, 89, 86, 16);
 		frame.getContentPane().add(lblSelectImage);
 		
-		fileChooser = new JButton("Browse..");
+		fileChooser = new JButton("browse");
 		fileChooser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -126,7 +126,7 @@ public class GUI_DataEntry {
 		}
 		);
 		        
-		fileChooser.setBounds(161, 84, 86, 28);
+		fileChooser.setBounds(161, 78, 154, 37);
 		frame.getContentPane().add(fileChooser);
 		
 		
@@ -143,7 +143,7 @@ public class GUI_DataEntry {
 		frame.getContentPane().add(lblImageability);
 		
 		categoryList = new JComboBox();
-        String selectExpression = "select * from `" + "mossWordsDemo" + "`";
+        String selectExpression = "select * from `" + "mossWords" + "`";
         System.out.println("Selecting: " + selectExpression + "\n");
         SelectRequest selectRequest = new SelectRequest(selectExpression);
 /*
@@ -205,14 +205,9 @@ public class GUI_DataEntry {
 			               new ReplaceableAttribute("Imageability", imageability, true),
 			               new ReplaceableAttribute("url", uploadImageToS3(), true)));
 					
-					sdb.batchPutAttributes(new BatchPutAttributesRequest("mossWordsDemo",data));
+					sdb.batchPutAttributes(new BatchPutAttributesRequest("mossWords",data));
 					
-					imageName.setText("");
-					category.setText("");
-					frequencyList.setSelectedIndex(0);
-					imageabilityList.setSelectedIndex(0);
-			}
-				
+		        }
 		}
 		);
 		        

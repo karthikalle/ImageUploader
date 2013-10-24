@@ -207,10 +207,8 @@ public class GUI_DataEntry {
 					
 					sdb.batchPutAttributes(new BatchPutAttributesRequest("mossWordsDemo",data));
 					
-					imageName.setText("");
-					category.setText("");
-					frequencyList.setSelectedIndex(0);
-					imageabilityList.setSelectedIndex(0);
+					frame.dispose();
+					new GUI_DataEntry();
 			}
 				
 		}
