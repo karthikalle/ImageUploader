@@ -60,9 +60,6 @@ public class GUI_DataEntry {
     private JButton btnUploadImage;
     private ArrayList<String> categories;
     private JComboBox categoryList;
-    private JComboBox frequencyList;
-    private JComboBox imageabilityList;
-
     private JTextField category;
     public static JLabel flagImage;
     private FileChooser fcp;

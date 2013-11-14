@@ -24,5 +24,4 @@ INDEX VERSION 1.126+/Users/karthikalle/Desktop/Images_put/.metadata/.plugins/org
 3399394134.index
 3712507179.index
 1384487945.index
-900640683.index
 3380752744.index

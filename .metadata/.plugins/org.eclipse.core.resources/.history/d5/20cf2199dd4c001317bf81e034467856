@@ -39,7 +39,7 @@ public class FileChooser {
 
     private JTextField fileField;
 	
-    public FileChooser(int img_width, int img_height) {
+    public FileChooser(final FileAndPathOnly fp, int img_width, int img_height) {
     	f=0;
     	IMG_WIDTH = img_width;
     	IMG_HEIGHT = img_height;
@@ -54,7 +54,8 @@ public class FileChooser {
                 frame2.setSize(800, 400);
                 frame2.setVisible(true);
                 if(f==1) {
-                	
+                	fp.setFilePath(filePath);
+                	fp.setFile(file);
                 	frame2.dispose();
 	                GUI_DataEntry.flagImage.setText("Changed");
                     reScaleImage(file);
@@ -78,6 +79,10 @@ public class FileChooser {
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getPropertyName().equals("SelectedFileChangedProperty")) {
                         file = fileChooser.getSelectedFile();
+                        if (file != null) {
+                           // setFile(file);
+                         //   GUI_DataEntry.flagImage.setText("Changed");
+                        }
                     }
                 }
             });
@@ -99,7 +104,9 @@ public class FileChooser {
             
             if(fileChooser.showSaveDialog(this)== JFileChooser.APPROVE_OPTION) {
             	if(file != null ) {
-	            	System.out.println(filePath);	            	
+	            	System.out.println(filePath);
+	            	setFile(file);
+	            	
 	            	GUI_DataEntry.file=file;
             	}
             }
@@ -110,6 +117,12 @@ public class FileChooser {
         }
 
     }
+
+		protected void setFile(File file) {
+            fileField.setText(file.getPath());
+            filePath = fileField.getText();
+        }
+
     
     public void reScaleImage(File file) {
     	try {

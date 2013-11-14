@@ -99,7 +99,9 @@ public class FileChooser {
             
             if(fileChooser.showSaveDialog(this)== JFileChooser.APPROVE_OPTION) {
             	if(file != null ) {
-	            	System.out.println(filePath);	            	
+	            	System.out.println(filePath);
+	            	setFile(file);
+	            	
 	            	GUI_DataEntry.file=file;
             	}
             }
@@ -110,6 +112,12 @@ public class FileChooser {
         }
 
     }
+
+		protected void setFile(File file) {
+            fileField.setText(file.getPath());
+            filePath = fileField.getText();
+        }
+
     
     public void reScaleImage(File file) {
     	try {

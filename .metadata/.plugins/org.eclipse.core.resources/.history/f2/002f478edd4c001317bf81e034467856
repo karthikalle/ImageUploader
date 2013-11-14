@@ -49,7 +49,10 @@ public class GUI_DataEntry {
 	private JFrame frame;
 	private JTextField imageName;
     private static AmazonSimpleDB sdb;
+    private JComboBox frequencyList;
     private JLabel lblUploadWordsInto;
+    private JComboBox imageabilityList;
+    private JComboBox categoryList;
     private JLabel lblWord;
     private JLabel lblSelectImage;
     private JLabel lblFrequency;
@@ -59,10 +62,6 @@ public class GUI_DataEntry {
     private JButton fileChooser;
     private JButton btnUploadImage;
     private ArrayList<String> categories;
-    private JComboBox categoryList;
-    private JComboBox frequencyList;
-    private JComboBox imageabilityList;
-
     private JTextField category;
     public static JLabel flagImage;
     private FileChooser fcp;
@@ -73,8 +72,7 @@ public class GUI_DataEntry {
     private int IMG_WIDTH;
     
     public static File file;
-	
-    /**
+	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
@@ -141,7 +139,7 @@ public class GUI_DataEntry {
             public void propertyChange(PropertyChangeEvent evt) {
             	System.out.println(evt.getPropertyName());
                 if (evt.getPropertyName().equals("text")) {
-                    showImage(file);
+                    showImage(fcp.getFile());
                 }
             }
         });
@@ -152,7 +150,9 @@ public class GUI_DataEntry {
 		fileChooser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 					flag = 1;
-					fcp = new FileChooser(IMG_WIDTH, IMG_HEIGHT);
+					FileAndPathOnly fpo = new FileAndPathOnly();
+					fcp = new FileChooser(fpo, IMG_WIDTH, IMG_HEIGHT);
+				//	flagImage.setText("Changed");
 		        }
 		}
 		);
