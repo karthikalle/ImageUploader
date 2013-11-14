@@ -1,0 +1,68 @@
+Last login: Sat Nov  9 14:24:12 on ttys000
+seas1279:~ karthikalle$ cd Desktop
+seas1279:Desktop karthikalle$ cd JPF
+seas1279:JPF karthikalle$ vi code/Sort.java
+seas1279:JPF karthikalle$ vi code/Sort.java
+seas1279:JPF karthikalle$ vi code/SusetSum.java
+seas1279:JPF karthikalle$ ls cod
+ls: cod: No such file or directory
+seas1279:JPF karthikalle$ ls code
+#Max.java#	Max.jpf		Sort.jpf	Sum.java	Test.java
+#Sort.java#	Sort.class	SubsetSum.java	Sum.jpf		Test.jpf
+Max.class	Sort.java	SubsetSum.jpf	SusetSum.java
+Max.java	Sort.java~	Sum.class	Test.class
+seas1279:JPF karthikalle$ vi code/SubsetSum.java
+seas1279:JPF karthikalle$ emacs code/SubsetSum.java
+
+
+
+
+
+
+
+
+
+        int combinations = 1;
+        for (int i = 0; i < A.length; i++) {
+            combinations *= 2;
+        }
+
+        // try each combination, treating the value as a vector of booleans                                                                                                          
+        for (int c = 1; c < combinations; c++) {
+
+            int comb = c;
+            int sum = 0;
+
+            // the bits in the value indicate whether or not to include                                                                                                              
+            // that element as part of the sum                                                                                                                                       
+            for (int i = A.length-1; i >= 0; i--) {
+                if (comb % 2 == 1) {
+                    sum += A[i];
+                }
+                comb = comb/2;
+            }
+
+            // if we found a solution, populate the boolean array and break                                                                                                          
+            if (sum == target) {
+                comb = c;
+                soln = new boolean[A.length];
+                for (int i = A.length-1; i > 0; i--) {
+                    if (comb % 2 == 1)
+                        soln[i] = true;
+                    else soln[i] = false;
+                    comb = comb / 2;
+                }
+                break;
+            }
+        }
+
+        // TODO: write your assertions here!                                                                                                                                         
+
+        return soln;
+
+
+    }
+
+
+}
+

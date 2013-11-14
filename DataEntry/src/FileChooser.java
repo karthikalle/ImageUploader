@@ -1,40 +1,65 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class FileChooser {
 
-	public String filePath;
+	private String filePath;
+	private File file;
 	private int f;
+	private int IMG_WIDTH;
+	private int IMG_HEIGHT;
 	
-    public FileChooser(final filePathOnly fp) {
+	private JFileChooser fileChooser;
+    private JPanel filePane;
+    private JFrame frame2;
+
+    private JTextField fileField;
+	
+    public FileChooser(final FileAndPathOnly fp, int img_width, int img_height) {
     	f=0;
+    	IMG_WIDTH = img_width;
+    	IMG_HEIGHT = img_height;
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
 
-                JFrame frame2 = new JFrame();
+                frame2 = new JFrame();
                 frame2.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame2.setLayout(new BorderLayout());
                 frame2.add(new MainPanel());
                 frame2.setSize(800, 400);
-                frame2.setLocationRelativeTo(null);
                 frame2.setVisible(true);
                 if(f==1) {
                 	fp.setFilePath(filePath);
+                	fp.setFile(file);
                 	frame2.dispose();
+	                GUI_DataEntry.flagImage.setText("Changed");
+                    reScaleImage(file);
+
                 }
             }
         });
@@ -43,24 +68,20 @@ public class FileChooser {
 
     protected class MainPanel extends JPanel {
 
-        private JFileChooser fileChooser;
-        private JPanel filePane;
-
-        private JTextField fileField;
-
         public MainPanel() {
 
             setLayout(new BorderLayout());
-
+            
             fileChooser = new JFileChooser();
             fileChooser.addPropertyChangeListener(new PropertyChangeListener() {
 
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getPropertyName().equals("SelectedFileChangedProperty")) {
-                        File file = fileChooser.getSelectedFile();
+                        file = fileChooser.getSelectedFile();
                         if (file != null) {
-                            setFile(file);
+                           // setFile(file);
+                         //   GUI_DataEntry.flagImage.setText("Changed");
                         }
                     }
                 }
@@ -78,36 +99,57 @@ public class FileChooser {
             fileField = new JTextField(10);
             filePane.add(fileField, gbc);
             
- /*           JButton closeButton = new JButton("Exit");
-            
-            closeButton.addActionListener(new ActionListener() {
-    			public void actionPerformed(ActionEvent e) {
-    				filePath = fileField.getText();
-    				filePane.setVisible(false);
-    			}
-            });
-            
-            closeButton.setBounds(100, 100, 25, 20);
-            filePane.add(closeButton); */
+
             add(filePane); 
             
-            if(fileChooser.showSaveDialog(this)== JFileChooser.APPROVE_OPTION)
-            	System.out.println(filePath);
+            if(fileChooser.showSaveDialog(this)== JFileChooser.APPROVE_OPTION) {
+            	if(file != null ) {
+	            	System.out.println(filePath);
+	            	setFile(file);
+	            	
+	            	GUI_DataEntry.file=file;
+            	}
+            }
             else if(fileChooser.showSaveDialog(this)== JFileChooser.CANCEL_OPTION)
             	System.out.println("Cancelled");
             f=1;
             
         }
 
-        protected void setFile(File file) {
-
-            fileField.setText(file.getPath());
-            filePath = fileField.getText();
-            
-        }
-
     }
 
+		protected void setFile(File file) {
+            fileField.setText(file.getPath());
+            filePath = fileField.getText();
+        }
+
+    
+    public void reScaleImage(File file) {
+    	try {
+    		
+			BufferedImage originalImage = ImageIO.read(file);
+			JPanel newPanel = new JPanel();
+			newPanel.add(new JLabel( new ImageIcon(originalImage)));
+			frame2.add(newPanel);
+			
+			Image resizedImage = originalImage.getScaledInstance(IMG_WIDTH, IMG_HEIGHT, Image.SCALE_SMOOTH);
+			
+			BufferedImage bsi = new BufferedImage(IMG_WIDTH, IMG_HEIGHT,BufferedImage.TYPE_INT_RGB);
+			bsi.getGraphics().drawImage(resizedImage, 0, 0, null);
+			FileOutputStream fos = new FileOutputStream(file);
+			
+			ImageIO.write(bsi, "jpeg", fos);
+
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+    public File getFile() {
+    	return file;
+    }
+    
 	public String getFilePath() {
 		return filePath;
 	}
