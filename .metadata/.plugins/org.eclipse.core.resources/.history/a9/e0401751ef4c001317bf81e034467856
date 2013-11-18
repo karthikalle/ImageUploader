@@ -1,0 +1,23 @@
+package dataEntryTesting;
+
+import org.fest.swing.edt.FailOnThreadViolationRepaintManager;
+import org.fest.swing.edt.GuiActionRunner;
+import org.fest.swing.edt.GuiQuery;
+import org.junit.BeforeClass;
+
+public class AssemblyTestCase {
+	 @BeforeClass
+	    public static void setUpOnce() {
+	        FailOnThreadViolationRepaintManager.install();
+	    }
+	 @Before 
+	    public void setUp()  { 
+	        frame =  GuiActionRunner.execute(new GuiQuery<AllTypesFrame>() { 
+	            protected AllTypesFrame executeInEDT() { 
+	                return new AllTypesFrame(); 
+	            }
+	        }); 
+	        testFrame = new FrameFixture(frame); 
+	        testFrame.show(); 
+	    }
+}

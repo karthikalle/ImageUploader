@@ -1,0 +1,21 @@
+package dataEntryTesting;
+
+import org.junit.Test;
+
+import dataEntry.GUI_DataEntry;
+import junit.framework.TestCase;
+
+public class GUI_DataEntryTest extends TestCase {
+	
+	@Test
+	public void noImageName() {
+		GUI_DataEntry gde = new GUI_DataEntry();
+		
+		gde
+	}
+	
+	
+	public GUI_DataEntryTest(String name) {
+		super(name);
+	}
+}
