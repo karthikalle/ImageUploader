@@ -1,0 +1,28 @@
+package dataEntryTesting;
+
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
+import dataEntry.GUI_DataEntry;
+import junit.framework.TestCase;
+
+public class UploadToS3Test {
+
+	@Test
+	public void uploadImageToS3() {
+		GUI_DataEntry gde = new GUI_DataEntry(){
+			public String validateFile() {
+				return "/Users/karthikalle/Desktop/testimages";
+			}
+		};
+		gde.word = "Cup";
+		gde.categoryName = "testCategory";
+		gde.showDialogs = false;
+		assertEquals("https://s3.amazonaws.com/mosswords/testCategory/Cup.jpg",gde.uploadImageToS3());
+	}
+	
+	@Test
+	public void 
+	
+}

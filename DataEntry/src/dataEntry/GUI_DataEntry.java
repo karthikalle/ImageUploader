@@ -53,7 +53,7 @@ public class GUI_DataEntry extends Frame{
     private JLabel lblCategory;
     private JLabel jlblimage;
     private JLabel lblImageability;
-    private JButton fileChooser;
+    public JButton fileChooser;
     private JButton btnUploadImage;
     private ArrayList<String> categories;
     private JComboBox<String> categoryList;
@@ -63,11 +63,13 @@ public class GUI_DataEntry extends Frame{
     public String word;
     public String imageability;
     public String frequency;
+    
+    public boolean showDialogs;
     private JTextField category;
     public static JLabel flagImage;
-    private FileChooser fcp;
+    public FileChooser fcp;
     public String url;
-    private String categoryVal;
+    public String categoryName;
     private int IMG_HEIGHT;
     private int IMG_WIDTH;
     
@@ -94,7 +96,8 @@ public class GUI_DataEntry extends Frame{
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		file=null;
+		file = null;
+		showDialogs = true;
         try {
 			sdb = new AmazonSimpleDBClient(new PropertiesCredentials(
 			        GUI_DataEntry.class.getResourceAsStream("AwsCredentials.properties")));
@@ -143,11 +146,9 @@ public class GUI_DataEntry extends Frame{
 		
 		fileChooser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-					fcp = new FileChooser(IMG_WIDTH, IMG_HEIGHT);
+					getFile();
 			}
-		}
-		);
-		
+		});
 		
 		lblCategory = new JLabel("Category");
 		lblCategory.setBounds(63, 130, 61, 16);
@@ -188,10 +189,11 @@ public class GUI_DataEntry extends Frame{
 				
 		category = new JTextField();
 		category.setBounds(161, 160, 154, 28);
-		category.setText("");
 		frame.getContentPane().add(category);
 		category.setVisible(false);
 		category.setColumns(10);
+		category.setText("");
+
 		
 		imageName = new JTextField();
 		imageName.setBounds(163, 40, 146, 28);
@@ -224,77 +226,121 @@ public class GUI_DataEntry extends Frame{
 			}
 		});
 		
-		
 		btnUploadImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				word = imageName.getText();
 				frequency = Integer.toString(frequencyList.getSelectedIndex()+1);
 				imageability = Integer.toString(imageabilityList.getSelectedIndex()+1);
-				uploadToSimpleDB();
-					
-			}
-				
-		}
-		);
-	
+				uploadToSimpleDB();		
+				btnUploadImage.setSelected(false);
+			}	
+		});
 	}
 
 	
 	public void uploadToSimpleDB() {
-	
-		if(word.length()==0){
-			JOptionPane.showMessageDialog(frame, "Please Enter Image Name");
+		
+		if(!validateImageName()){
+			System.out.println("here21");
+
 			return;
 		}
+		if(!checkIfAlreadyExistsAndReplace()){
+			System.out.println("here22");
+			return;
+		}
+		
+	    if(!validateAndGetCategory()){
+	    	System.out.println("here23");
+	    	return;
+	    }
+		
+		ArrayList<ReplaceableItem> data = new ArrayList<ReplaceableItem>();
+    	
+    	System.out.println(word + frequency + imageability + categoryName);
+    	
+    	if(validateFile()!=null){
+    		data.add(new ReplaceableItem(word).withAttributes(
+   			 new ReplaceableAttribute("Category", categoryName.toLowerCase(), true),
+	               new ReplaceableAttribute("Length", Integer.toString(word.length()), true),
+	               new ReplaceableAttribute("frequency", frequency, true),
+	               new ReplaceableAttribute("Imageability", imageability, true),
+	               new ReplaceableAttribute("url", uploadImageToS3(), true)));
+
+        	sdb.batchPutAttributes(new BatchPutAttributesRequest("mossWords",data));
+			restart();
+    	}
+    	
+    	return;
+	}
 	
+
+	public boolean validateAndGetCategory() {
+		int index  = categoryList.getSelectedIndex();
+		if(index != 0){
+			categoryName = (String) categoryList.getItemAt(index);
+		}
+		
+		else if(!(category.getText().equals(""))) {
+				categoryName = category.getText();
+		}
+		else {
+			if(showDialogs)
+				JOptionPane.showMessageDialog(null, "Please Enter a category");
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean validateImageName() {
+		if(word.length()==0){
+			if(showDialogs)
+				JOptionPane.showMessageDialog(frame, "Please Enter Image Name");
+			return false;
+		}
+		return true;
+	}
+	
+	public void getFile() {
+		fcp = new FileChooser(IMG_WIDTH, IMG_HEIGHT);
+	}
+	
+	public boolean checkIfAlreadyExistsAndReplace() {
 		String selectExpression = "select * from `" + "mossWords" + "` where itemName() = '"+word+"'";
 	    SelectRequest selectRequest = new SelectRequest(selectExpression);
 	
 	    for(Item item: sdb.select(selectRequest).getItems()) {
 	    	if(item.getName().equals(word)) {
-	    		
+	    		System.out.println("exists");
 	    		Object[] options = {"No, use the older one","Yes, replace"};
-				int choice = JOptionPane.showOptionDialog(frame, "Image Name already exists","User Permission to replace", 
-						JOptionPane.YES_NO_CANCEL_OPTION,
-					    JOptionPane.QUESTION_MESSAGE,
-					    null,
-					    options,
-					    options[1]);
-				if(choice==0)
-					restart();
-					return;
+	    		if(showDialogs) {
+					int choice = JOptionPane.showOptionDialog(frame, "Image Name already exists","User Permission to replace", 
+							JOptionPane.YES_NO_CANCEL_OPTION,
+						    JOptionPane.QUESTION_MESSAGE,
+						    null,
+						    options,
+						    options[1]);
+					if(choice==0){
+						restart();
+						return false;
+					}
+	    		}
+	    		return true;
 	    	}
 	    }
-	
-		int index  = categoryList.getSelectedIndex();
-		categoryVal = (String) categoryList.getItemAt(index);
-		if(!(category.getText().equals(""))) {
-				categoryVal = category.getText();
-		}
-		
-		else if (categoryVal.equals("")) {
-			JOptionPane.showMessageDialog(null, "Please Enter a category");
-			return;
-		}
-		
-		ArrayList<ReplaceableItem> data = new ArrayList<ReplaceableItem>();
-    	
-    	System.out.println(word + frequency + imageability + categoryVal);
-    	
-        	data.add(new ReplaceableItem(word).withAttributes(
-   			 new ReplaceableAttribute("Category", categoryVal.toLowerCase(), true),
-	               new ReplaceableAttribute("Length", Integer.toString(word.length()), true),
-	               new ReplaceableAttribute("frequency", frequency, true),
-	               new ReplaceableAttribute("Imageability", imageability, true),
-	               new ReplaceableAttribute("url", uploadImageToS3(), true)));
-			
-			sdb.batchPutAttributes(new BatchPutAttributesRequest("mossWords",data));
-			restart();
+	    return true;
 	}
 	
-
+	public void restart() {
+		imageName.setText("");
+		category.setText("");
+		categoryList.setSelectedIndex(0);
+		frequencyList.setSelectedIndex(0);
+		imageabilityList.setSelectedIndex(0);
+		return;
+	}
+	
 	public void showImage(File file) {
-		
 		BufferedImage bi;
 		try {
 			System.out.println(file);
@@ -310,20 +356,16 @@ public class GUI_DataEntry extends Frame{
 		}		
 	}
 
-	protected String uploadImageToS3() {
+	public String uploadImageToS3() {
 		String existingBucketName = "mosswords";
-		String keyName = imageName.getText()+".jpg";
+		String keyName = word + ".jpg";
 
-		String filePath = file.getPath();			
-		if(fcp==null||filePath==null||filePath=="") {
-			JOptionPane.showMessageDialog(frame, "Please choose an image");
-			return null;
-		}
+		String filePath = validateFile();
 		
-		String amazonFileUploadLocationOriginal = existingBucketName+"/"+categoryVal;
+		String amazonFileUploadLocationOriginal = existingBucketName+"/"+categoryName;
 
 		System.out.println(existingBucketName);
-		System.out.println(categoryVal);
+		System.out.println(categoryName);
 		
 		AmazonS3 s3Client;
 		try {
@@ -353,12 +395,18 @@ public class GUI_DataEntry extends Frame{
 		return url;
 	}
 	
-	public void restart() {
-		imageName.setText("");
-		category.setText("");
-		categoryList.setSelectedIndex(0);
-		frequencyList.setSelectedIndex(0);
-		imageabilityList.setSelectedIndex(0);
-		return;
+	public String validateFile() {
+		
+		if(file==null)
+			return null;
+		String filePath = file.getPath();
+		if(fcp==null||filePath==null||filePath=="") {
+			if(showDialogs)
+				JOptionPane.showMessageDialog(frame, "Please choose an image");
+			return null;
+		}
+		return filePath;
 	}
+	
+	
 }

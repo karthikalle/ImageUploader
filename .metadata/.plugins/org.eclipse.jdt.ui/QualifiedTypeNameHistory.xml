@@ -36,11 +36,19 @@
 <fullyQualifiedTypeName name="org.fest.swing.edt.GuiActionRunner"/>
 <fullyQualifiedTypeName name="org.fest.swing.edt.GuiQuery"/>
 <fullyQualifiedTypeName name="org.fest.swing.fixture.FrameFixture"/>
-<fullyQualifiedTypeName name="org.junit.Before"/>
 <fullyQualifiedTypeName name="dataEntry.GUI_DataEntry"/>
 <fullyQualifiedTypeName name="org.fest.swing.testng.testcase.FestSwingTestngTestCase"/>
-<fullyQualifiedTypeName name="org.junit.Test"/>
 <fullyQualifiedTypeName name="org.fest.swing.core.Robot"/>
 <fullyQualifiedTypeName name="org.fest.swing.edt.FailOnThreadViolationRepaintManager"/>
 <fullyQualifiedTypeName name="java.awt.Frame"/>
+<fullyQualifiedTypeName name="org.junit.Test"/>
+<fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
+<fullyQualifiedTypeName name="java.awt.event.MouseEvent"/>
+<fullyQualifiedTypeName name="java.awt.event.MouseAdapter"/>
+<fullyQualifiedTypeName name="com.amazonaws.services.simpledb.model.SelectRequest"/>
+<fullyQualifiedTypeName name="com.amazonaws.services.simpledb.model.Item"/>
+<fullyQualifiedTypeName name="com.amazonaws.services.simpledb.AmazonSimpleDB"/>
+<fullyQualifiedTypeName name="org.junit.Before"/>
+<fullyQualifiedTypeName name="com.amazonaws.auth.PropertiesCredentials"/>
+<fullyQualifiedTypeName name="junit.framework.Assert"/>
 </qualifiedTypeNameHistroy>

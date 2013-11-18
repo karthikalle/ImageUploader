@@ -19,12 +19,13 @@ public class FileChooser {
 
 	private String filePath;
 	private File file;
-	private int flag;
+	public int flag;
 	private int IMG_WIDTH;
 	private int IMG_HEIGHT;
+	public boolean showDialogs;
 	
 	private JFileChooser fileChooser;
-    private JFrame frame2;
+    public JFrame frame2;
 	
     public FileChooser(int img_width, int img_height) {
     	flag=0;
@@ -33,11 +34,13 @@ public class FileChooser {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-
+            	
+            	showDialogs = true;
                 frame2 = new JFrame();
                 frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame2.setLayout(new BorderLayout());
-                frame2.add(new MainPanel());
+                if(showDialogs)
+                	frame2.add(new MainPanel());
                 frame2.setSize(800, 400);
                 if(flag==1) {
                 	frame2.dispose();
@@ -84,13 +87,13 @@ public class FileChooser {
     
     public boolean reScaleImage(File file) {
     	try {
-    		
 			BufferedImage originalImage = ImageIO.read(file);		
 			
 			int originalWidth = originalImage.getWidth();
 			int originalHeight = originalImage.getHeight();
 			
-			if(originalWidth<600 || originalHeight<600) {
+			if(originalWidth < 600 || originalHeight < 600) {
+				if(showDialogs)
 				JOptionPane.showMessageDialog(frame2, "Please upload images with resolution higher than 600 X 600");
 				return false;
 			}

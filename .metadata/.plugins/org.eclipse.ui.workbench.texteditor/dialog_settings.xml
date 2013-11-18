@@ -3,26 +3,26 @@
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="263" key="DIALOG_WIDTH"/>
 		<item value="338" key="DIALOG_Y_ORIGIN"/>
-		<item value="851" key="DIALOG_X_ORIGIN"/>
 		<item value="399" key="DIALOG_HEIGHT"/>
+		<item value="851" key="DIALOG_X_ORIGIN"/>
 		<item value="1|Lucida Grande|11.0|0|COCOA|1|LucidaGrande" key="DIALOG_FONT_NAME"/>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="true" key="wrap"/>
-		<item value="false" key="casesensitive"/>
 		<item value="false" key="isRegEx"/>
+		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="flagImage" key="selection"/>
+		<item value="itemName()" key="selection"/>
 		<list key="findhistory">
-			<item value="flagimage"/>
-			<item value="&lt;STRING&gt;"/>
-			<item value="filepane"/>
-			<item value="jfilechooser"/>
-			<item value="fileCHooser"/>
-			<item value="flag"/>
-			<item value="imageFl"/>
-			<item value="categoryLi"/>
+			<item value="itemName()"/>
+			<item value="c"/>
+			<item value="sdb"/>
+			<item value="category"/>
+			<item value="fcp"/>
+			<item value="FileChooser"/>
+			<item value="filechooser"/>
+			<item value="please"/>
 		</list>
 		<list key="replacehistory">
 			<item value="mossWords"/>

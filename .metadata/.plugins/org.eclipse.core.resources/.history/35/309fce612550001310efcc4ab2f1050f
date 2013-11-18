@@ -1,0 +1,10 @@
+package dataEntryTesting;
+
+import dataEntry.GUI_DataEntry;
+import junit.framework.TestCase;
+
+public class UploadToS3Test extends TestCase {
+
+	
+	
+}
