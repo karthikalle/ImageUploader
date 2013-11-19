@@ -22,7 +22,7 @@ public class FileChooser {
 	public int flag;
 	private int IMG_WIDTH;
 	private int IMG_HEIGHT;
-	public boolean showDialogs = true;
+	public boolean showDialogs;
 	
 	private JFileChooser fileChooser;
     public JFrame frame2;
@@ -35,6 +35,7 @@ public class FileChooser {
             @Override
             public void run() {
             	
+            	showDialogs = true;
                 frame2 = new JFrame();
                 frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame2.setLayout(new BorderLayout());
