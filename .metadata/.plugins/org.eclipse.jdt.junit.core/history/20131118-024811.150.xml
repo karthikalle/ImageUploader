@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><testrun name="UploadToS3Test" project="DataEntry" tests="1" started="1" failures="0" errors="0" ignored="0">
-  <testsuite name="dataEntryTesting.UploadToS3Test" time="2.134">
-    <testcase name="uploadImageToS3" classname="dataEntryTesting.UploadToS3Test" time="2.134"/>
-  </testsuite>
-</testrun>
