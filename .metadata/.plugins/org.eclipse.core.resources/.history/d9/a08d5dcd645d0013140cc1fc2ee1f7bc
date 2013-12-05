@@ -21,7 +21,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -411,8 +410,8 @@ public class GUI_DataEntry extends Frame{
 		imageFrame = new JFrame();
 		imageFrame.setBounds(50, 50, 600, 400);
 		imageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		imageFrame.setAlwaysOnTop(true);
 		imageFrame.setLayout(null);
-		imageFrame.setVisible(true);
 		
 		BufferedImage bi;
 		try {
@@ -462,7 +461,7 @@ public class GUI_DataEntry extends Frame{
 			imageability.setBounds(165, 146, 161, 36);
 			imageFrame.getContentPane().add(imageability);
 			
-			System.out.println("URL Value:"+getAttributeValue(item,"URL"));
+	System.out.println("URL Value:"+getAttributeValue(item,"URL"));
 			
 			URL imageURL = new URL(getAttributeValue(item,"URL"));
 			URLConnection connection = imageURL.openConnection();

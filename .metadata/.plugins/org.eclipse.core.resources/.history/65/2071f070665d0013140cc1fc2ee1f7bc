@@ -47,7 +47,7 @@ import com.amazonaws.services.simpledb.model.SelectRequest;
 public class GUI_DataEntry extends Frame{
 
 	public JFrame frame;
-	public JFrame imageFrame;
+	public JInternalFrame imageFrame;
 	public JTextField imageName;
     private static AmazonSimpleDB sdb;
     private JLabel lblUploadWordsInto;
@@ -408,7 +408,7 @@ public class GUI_DataEntry extends Frame{
 	}
 	
 	public void showImageForReview(Item item) {
-		imageFrame = new JFrame();
+		JInternalFrameimageFrame = new JInternalFrame();
 		imageFrame.setBounds(50, 50, 600, 400);
 		imageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		imageFrame.setLayout(null);
