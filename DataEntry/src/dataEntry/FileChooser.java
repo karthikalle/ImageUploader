@@ -31,8 +31,6 @@ public class FileChooser {
     	flag=0;
     	IMG_WIDTH = img_width;
     	IMG_HEIGHT = img_height;
-    	GUI_DataEntry.flagImage.setText("");
-    	
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {

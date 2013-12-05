@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="UploadToSimpleDBTest" project="DataEntry" tests="2" started="2" failures="0" errors="0" ignored="0">
+  <testsuite name="dataEntryTesting.UploadToSimpleDBTest" time="7.462">
+    <testcase name="uploadImageData" classname="dataEntryTesting.UploadToSimpleDBTest" time="2.353"/>
+    <testcase name="testImageNameEmpty" classname="dataEntryTesting.UploadToSimpleDBTest" time="5.109"/>
+  </testsuite>
+</testrun>

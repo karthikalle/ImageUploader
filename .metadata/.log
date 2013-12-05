@@ -1528,6 +1528,7 @@ This version of Shared was compiled for Eclipse 3.7 but is running on Eclipse 3.
 
 !ENTRY com.instantiations.eclipse 1 0 2013-11-18 19:00:50.023
 !MESSAGE Compilation unit does not exist: UploadToSimpleDBTest.java
+<<<<<<< HEAD
 
 !ENTRY com.instantiations.eclipse 1 0 2013-11-18 19:03:00.137
 !MESSAGE Compilation unit does not exist: UploadToSimpleDBTest.java
@@ -7338,3 +7339,5 @@ Binding(ALT+COMMAND+C,
 
 !ENTRY org.eclipse.debug.ui 4 120 2013-12-04 23:08:56.824
 !MESSAGE org.eclipse.debug.ui.toggleBreakpointsTargetFactory extension failed to load breakpoint toggle target because the specified id is already registered.  Specified ID is: org.chromium.debug.ui.ChromiumToggleBreakpointTargetFactory
+=======
+>>>>>>> parent of 5f3ae63... Trying for final

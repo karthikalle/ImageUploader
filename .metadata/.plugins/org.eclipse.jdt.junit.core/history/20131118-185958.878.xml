@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="Rerun dataEntryTesting.DataEntryTest" project="DataEntry" tests="10" started="10" failures="0" errors="0" ignored="0">
+  <testsuite name="dataEntryTesting.DataEntryTest" time="9.29">
+    <testcase name="uploadImageData" classname="dataEntryTesting.DataEntryTest" time="2.157"/>
+    <testcase name="testImageNameEmpty" classname="dataEntryTesting.DataEntryTest" time="0.136"/>
+    <testcase name="testImageNameValid" classname="dataEntryTesting.DataEntryTest" time="0.143"/>
+    <testcase name="testImageAlreadyExists" classname="dataEntryTesting.DataEntryTest" time="0.218"/>
+    <testcase name="testCategoryEmpty" classname="dataEntryTesting.DataEntryTest" time="0.12"/>
+    <testcase name="testUploadImageToS3" classname="dataEntryTesting.DataEntryTest" time="0.468"/>
+    <testcase name="testFileIsNull" classname="dataEntryTesting.DataEntryTest" time="0.175"/>
+    <testcase name="testNoFileSelected" classname="dataEntryTesting.DataEntryTest" time="0.093"/>
+    <testcase name="testRescaleHighResolutionImage" classname="dataEntryTesting.DataEntryTest" time="0.563"/>
+    <testcase name="testLowResolutionImage" classname="dataEntryTesting.DataEntryTest" time="5.215"/>
+  </testsuite>
+</testrun>

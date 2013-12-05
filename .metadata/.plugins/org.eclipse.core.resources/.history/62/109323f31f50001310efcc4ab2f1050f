@@ -1,0 +1,79 @@
+package dataEntryTesting;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.amazonaws.auth.PropertiesCredentials;
+import com.amazonaws.services.simpledb.AmazonSimpleDB;
+import com.amazonaws.services.simpledb.model.Item;
+import com.amazonaws.services.simpledb.model.SelectRequest;
+import com.amazonaws.services.simpledb.AmazonSimpleDBClient;
+
+import dataEntry.GUI_DataEntry;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
+public class UploadToSimpleDBTest {
+	
+	public AmazonSimpleDB sdb;
+	
+	@Before
+	public void setUp () {
+		try{
+	
+		sdb = new AmazonSimpleDBClient(new PropertiesCredentials(
+		        GUI_DataEntry.class.getResourceAsStream("AwsCredentials.properties")));
+		}
+		catch (Exception e){
+			System.out.println(e);
+		}
+	}
+	
+	@Test
+	public void uploadImageData() {
+		
+			GUI_DataEntry gde = new GUI_DataEntry(){
+				public boolean validateAndGetCategory() {
+					return true;
+				}
+				public boolean validateImageName(){
+					return true;
+				}
+				public boolean checkIfAlreadyExistsAndReplace() {
+					return true;
+				}
+				public String uploadImageToS3(){
+					return "testURL";
+				}
+			};
+			String imageName = "SaucePan";
+			
+			gde.word = imageName;	
+			gde.frequency = "4";
+			gde.imageability = "6";
+			gde.categoryName= "testCategory";
+			gde.uploadToSimpleDB();
+			
+			String selectExpression = "select * from `" + "mossWords" + "` where itemName() = '"+imageName+"'";
+		    SelectRequest selectRequest = new SelectRequest(selectExpression);
+	
+		    String itemName=""; 
+		    for(Item item: sdb.select(selectRequest).getItems()) {
+		    		itemName = item.getName().toString();
+		    }	
+		    	assertEquals(imageName, itemName);
+	}
+	
+	@Test
+	public void testImageNameEmpty() {
+		GUI_DataEntry gde = new GUI_DataEntry();
+		gde.word = "";
+		
+		assertFalse(gde.validateImageName());
+
+	}
+	
+}

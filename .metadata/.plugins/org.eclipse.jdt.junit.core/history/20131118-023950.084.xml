@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="UploadToSimpleDBTest" project="DataEntry" tests="5" started="5" failures="0" errors="0" ignored="0">
+  <testsuite name="dataEntryTesting.UploadToSimpleDBTest" time="3.128">
+    <testcase name="uploadImageData" classname="dataEntryTesting.UploadToSimpleDBTest" time="2.531"/>
+    <testcase name="testImageNameEmpty" classname="dataEntryTesting.UploadToSimpleDBTest" time="0.132"/>
+    <testcase name="testImageNameValid" classname="dataEntryTesting.UploadToSimpleDBTest" time="0.118"/>
+    <testcase name="testImageAlreadyExists" classname="dataEntryTesting.UploadToSimpleDBTest" time="0.214"/>
+    <testcase name="testCategoryEmpty" classname="dataEntryTesting.UploadToSimpleDBTest" time="0.133"/>
+  </testsuite>
+</testrun>

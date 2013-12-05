@@ -1,0 +1,20 @@
+package dataEntryTesting;
+
+import dataEntry.GUI_DataEntry;
+import junit.framework.TestCase;
+
+public class UploadToS3Test extends TestCase {
+
+	@Test
+	public void uploadImageToS3() {
+		GUI_DataEntry gde = new GUI_DataEntry(){
+			public String validateFile() {
+				return "/Users/karthikalle/Desktop/testimages";
+			}
+		};
+		gde.word = "Cup";
+		gde.categoryName = "testCategory";
+		
+	}
+	
+}
