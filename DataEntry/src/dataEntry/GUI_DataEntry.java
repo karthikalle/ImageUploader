@@ -21,7 +21,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -397,11 +396,28 @@ public class GUI_DataEntry extends Frame{
 	
 	    for(Item item: sdb.select(selectRequest).getItems()) {
 	    	if(item.getName().equals(word)) {
+	    		
+	    		url = "https://s3.amazonaws.com/"+"mosswords"+"/Images/"+categoryName+"/"+word+".jpg";
+	    		
+	    	// DisplayExistingImage display = new DisplayExistingImage(item);
 	    		showImageForReview(item);
-	    		if(choice == 0)
+	  /*  		
+	    		System.out.println("exists");
+	    		Object[] options = {"No, use the older one","Yes, replace"};
+	    		if(showDialogs) {
+					int choice = JOptionPane.showOptionDialog(frame, "Image Name already exists","Replace Image?", 
+							JOptionPane.YES_NO_CANCEL_OPTION,
+						    JOptionPane.QUESTION_MESSAGE,
+						    null,
+						    options,
+						    options[1]);
+					System.out.println(choice); */
+					
+	    		if(choice == 0){
 	    				return false;
-	    		else
-	    			return true;
+					}
+	    													
+	    		return true;
 	    	}
 	    }
 	    return true;
@@ -411,8 +427,8 @@ public class GUI_DataEntry extends Frame{
 		imageFrame = new JFrame();
 		imageFrame.setBounds(50, 50, 600, 400);
 		imageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		imageFrame.setAlwaysOnTop(true);
 		imageFrame.setLayout(null);
-		imageFrame.setVisible(true);
 		
 		BufferedImage bi;
 		try {
@@ -462,7 +478,7 @@ public class GUI_DataEntry extends Frame{
 			imageability.setBounds(165, 146, 161, 36);
 			imageFrame.getContentPane().add(imageability);
 			
-			System.out.println("URL Value:"+getAttributeValue(item,"URL"));
+	System.out.println("URL Value:"+getAttributeValue(item,"URL"));
 			
 			URL imageURL = new URL(getAttributeValue(item,"URL"));
 			URLConnection connection = imageURL.openConnection();
