@@ -20,9 +20,12 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -46,7 +49,7 @@ import com.amazonaws.services.simpledb.model.SelectRequest;
 public class GUI_DataEntry extends Frame{
 
 	public JFrame frame;
-	public JFrame imageFrame;
+	public JPanel imageFrame;
 	public JTextField imageName;
     private static AmazonSimpleDB sdb;
     private JLabel lblUploadWordsInto;
@@ -56,6 +59,8 @@ public class GUI_DataEntry extends Frame{
     private JLabel lblCategory;
     private JLabel jlblimage;
     private JLabel lblImageability;
+    public static JLabel flag;
+    
     private JButton lblOrEnterNew;
     public JButton fileChooser;
     private JButton btnUploadImage;
@@ -245,6 +250,31 @@ public class GUI_DataEntry extends Frame{
 			}
 		});
 		
+		flag = new JLabel();
+		flag.setText("");
+		flag.setVisible(false);
+		flag.addPropertyChangeListener(new PropertyChangeListener() {
+
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+            	System.out.println(evt.getPropertyName());
+                if (evt.getPropertyName().equals("text")) {
+                	if(flag.getText()!=""){
+                		if(flag.getText().equals("Replace")){
+		                	uploadImage();
+		                	DisplayExisting.dialog.dispose();
+	                		if(showDialogs)
+		        	        	seekRestart();
+                		}
+                		else{
+                			DisplayExisting.dialog.dispose();
+                			if(showDialogs)
+    	        	        	seekRestart();
+                		}
+                	}
+                }
+            }
+        });		
 		btnUploadImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				word = imageName.getText();
@@ -284,44 +314,51 @@ public class GUI_DataEntry extends Frame{
     		return;
     	}
     	
-    	if(!(validateFile().equals("invalid"))){
-    		if(!checkIfAlreadyExistsAndReplace()){
-    			System.out.println("here22");
-    			restart();
-    			return;
+    	System.out.println(validateFile());
+    	if((validateFile().equals("invalid"))){
+    		System.out.println("why here");
+    		restart();
+			return;
     	}
-    	
-    	
+		if(checkIfAlreadyExistsAndReplace()){
+			/*uploadImage();
+
+	        if(showDialogs) {
+	    		seekRestart();
+			}*/
+		}
+    	return;
+	}
+
+	private void seekRestart() {
+		Object[] options = {"Exit Application","Add another Image"};
+		
+		int restartChoice = JOptionPane.showOptionDialog(frame, "Image has been Uploaded","Upload Another Image", 
+				JOptionPane.YES_NO_CANCEL_OPTION,
+			    JOptionPane.QUESTION_MESSAGE,
+			    null,
+			    options,
+			    options[1]);
+		System.out.println(restartChoice);
+		if(restartChoice == 0)
+				System.exit(0);
+		else
+			restart();
+	}
+
+	private void uploadImage() {
+		System.out.println("here22");
 		ArrayList<ReplaceableItem> data = new ArrayList<ReplaceableItem>();	
 		System.out.println(word+categoryName+word.length()+frequency+imageability+uploadImageToS3()+computeLevel(frequency,Integer.toString(word.length())));
-    		data.add(new ReplaceableItem(word).withAttributes(
+			data.add(new ReplaceableItem(word).withAttributes(
 			new ReplaceableAttribute("Category", categoryName, true),
-	        new ReplaceableAttribute("Length", computeLength(word), true),
-	        new ReplaceableAttribute("Frequency", frequency, true),
+		    new ReplaceableAttribute("Length", computeLength(word), true),
+		    new ReplaceableAttribute("Frequency", frequency, true),
 			new ReplaceableAttribute("Imageability", imageability, true),
-	        new ReplaceableAttribute("URL", uploadImageToS3(), true),
+		    new ReplaceableAttribute("URL", uploadImageToS3(), true),
 			new ReplaceableAttribute("Level", computeLevel(frequency, computeLength(word)),true)
-        ));
-    	
-        sdb.batchPutAttributes(new BatchPutAttributesRequest("mosswords",data));
-			if(showDialogs) {
-	    		Object[] options = {"Exit Application","Add another Image"};
-	    		
-				int choice2 = JOptionPane.showOptionDialog(frame, "Image has been Uploaded","Upload Another Image", 
-						JOptionPane.YES_NO_CANCEL_OPTION,
-					    JOptionPane.QUESTION_MESSAGE,
-					    null,
-					    options,
-					    options[1]);
-				System.out.println(choice2);
-				if(choice2 == 0){
-						System.exit(0);
-				}
-			}
-			restart();
-    	}
-    	
-    	return;
+		));
+		sdb.batchPutAttributes(new BatchPutAttributesRequest("mosswords",data));
 	}
 	
 	private static String computeLength(String word) {
@@ -400,8 +437,29 @@ public class GUI_DataEntry extends Frame{
 	    		url = "https://s3.amazonaws.com/"+"mosswords"+"/Images/"+categoryName+"/"+word+".jpg";
 	    		
 	    	// DisplayExistingImage display = new DisplayExistingImage(item);
-	    		showImageForReview(item);
-	  /*  		
+	    		//showImageForReview(item);
+	    		/* 		Object[] options = {"No, use the older one","Yes, replace"};
+	    		
+	    		
+	    	    JOptionPane optionPane = new JOptionPane(showImageForReview(item), 
+	    	    		JOptionPane.QUESTION_MESSAGE, 
+	    	    		JOptionPane.YES_NO_CANCEL_OPTION,
+	    	    		null,
+	    	    		options,
+	    	    		options[1]
+	    	    		);  
+	    	    JDialog dialog = optionPane.createDialog(frame, "Enter Data");  
+	    	    dialog.setVisible(true);
+	    		dialog.show();
+	    		JPanel imgPanel = new JPanel();
+	    		imgPanel = showImageForReview(item);
+	    		imgPanel; */
+	    	    /*     		choice = JOptionPane.showOptionDialog(frame,
+                        showImageForReview(item),
+                       " ",
+                      JOptionPane.YES_NO_CANCEL_OPTION,
+                      JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+	   		
 	    		System.out.println("exists");
 	    		Object[] options = {"No, use the older one","Yes, replace"};
 	    		if(showDialogs) {
@@ -412,24 +470,23 @@ public class GUI_DataEntry extends Frame{
 						    options,
 						    options[1]);
 					System.out.println(choice); */
-					
-	    		if(choice == 0){
-	    				return false;
-					}
-	    													
-	    		return true;
+	    		System.out.println("hi");
+				DisplayExisting.initialize(item);
+	    		if(DisplayExisting.option == 0)
+	    			return false;
+	    		else if(DisplayExisting.option == 1)
+	    			return true;
 	    	}
 	    }
 	    return true;
 	}
 	
-	public void showImageForReview(Item item) {
-		imageFrame = new JFrame();
+	public JPanel showImageForReview(Item item) {
+		imageFrame = new JPanel();
 		imageFrame.setBounds(50, 50, 600, 400);
-		imageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		imageFrame.setAlwaysOnTop(true);
 		imageFrame.setLayout(null);
-		
+		imageFrame.setVisible(true);
+	
 		BufferedImage bi;
 		try {
 			
@@ -441,42 +498,42 @@ public class GUI_DataEntry extends Frame{
 			JLabel imageNameLabel = new JLabel("Image Name:");
 			imageNameLabel.setBounds(63, 86, 161, 36);
 			imageNameLabel.setFont(new Font("Arial", Font.BOLD, 13));
-			imageFrame.getContentPane().add(imageNameLabel);
+			imageFrame.add(imageNameLabel);
 			
 			JLabel imageName = new JLabel(word);
 			imageName.setBounds(165, 86, 161, 36);
-			imageFrame.getContentPane().add(imageName);
+			imageFrame.add(imageName);
 			
 			System.out.println("Category "+getAttributeValue(item, "Category"));
 			
 			JLabel categoryLabel = new JLabel("Category:");
 			categoryLabel.setBounds(63, 106, 161, 36);
 			categoryLabel.setFont(new Font("Arial", Font.BOLD, 13));
-			imageFrame.getContentPane().add(categoryLabel);
+			imageFrame.add(categoryLabel);
 			
 			JLabel category = new JLabel(getAttributeValue(item, "Category"));
 			category.setBounds(165, 106, 161, 36);
-			imageFrame.getContentPane().add(category);
+			imageFrame.add(category);
 			
 			System.out.println("Frequency: "+getAttributeValue(item, "Frequency"));
 
 			JLabel freqLabel = new JLabel("Image Name:");
 			freqLabel.setBounds(63, 126, 161, 36);
 			freqLabel.setFont(new Font("Arial", Font.BOLD, 13));
-			imageFrame.getContentPane().add(freqLabel);
+			imageFrame.add(freqLabel);
 			
 			JLabel frequency = new JLabel(getAttributeValue(item, "Frequency"));
 			frequency.setBounds(165, 126, 161, 36);
-			imageFrame.getContentPane().add(frequency);
+			imageFrame.add(frequency);
 			
 			JLabel imageabilityLabel = new JLabel("Image Name:");
 			imageabilityLabel.setBounds(63, 146, 161, 36);
 			imageabilityLabel.setFont(new Font("Arial", Font.BOLD, 13));
-			imageFrame.getContentPane().add(imageabilityLabel);
+			imageFrame.add(imageabilityLabel);
 			
 			JLabel imageability = new JLabel(getAttributeValue(item, "Imageability"));
 			imageability.setBounds(165, 146, 161, 36);
-			imageFrame.getContentPane().add(imageability);
+			imageFrame.add(imageability);
 			
 	System.out.println("URL Value:"+getAttributeValue(item,"URL"));
 			
@@ -491,25 +548,25 @@ public class GUI_DataEntry extends Frame{
 			
 			JButton replaceButton = new JButton("Replace Original");
 			replaceButton.setBounds(15, 206, 140, 25);
-			imageFrame.getContentPane().add(replaceButton);
+			imageFrame.add(replaceButton);
 			
 			JButton useExistingButton = new JButton("Use Existing");
 			useExistingButton.setBounds(150, 206, 140, 25);
-			imageFrame.getContentPane().add(useExistingButton);
+			imageFrame.add(useExistingButton);
 			
 			imageFrame.setVisible(true);
 
 			replaceButton.addActionListener(new ActionListener (){
 				public void actionPerformed(ActionEvent e) {
 					choice = 1;
-					imageFrame.dispose();	
+				//	imageFrame.dispose();	
 				}	
 			});
 			
 			useExistingButton.addActionListener(new ActionListener (){
 				public void actionPerformed(ActionEvent e) {
 					choice = 0;
-					imageFrame.dispose();			
+				//	imageFrame.dispose();			
 				}	
 			});
 			
@@ -517,6 +574,7 @@ public class GUI_DataEntry extends Frame{
 		catch (Exception e) {
 			System.out.println("here "+e);
 		}
+		return imageFrame;
 						
 	}
 
@@ -603,7 +661,7 @@ public class GUI_DataEntry extends Frame{
 	
 	public String validateFile() {
 		
-		if(file==null) {
+		if(file == null) {
 			if(showDialogs)
 				JOptionPane.showMessageDialog(frame, "Please choose an image");
 			return "invalid";	
