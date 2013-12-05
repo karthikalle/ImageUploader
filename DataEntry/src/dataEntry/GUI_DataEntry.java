@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -46,7 +48,7 @@ import com.amazonaws.services.simpledb.model.SelectRequest;
 public class GUI_DataEntry extends Frame{
 
 	public JFrame frame;
-	public JFrame imageFrame;
+	public JPanel imageFrame;
 	public JTextField imageName;
     private static AmazonSimpleDB sdb;
     private JLabel lblUploadWordsInto;
@@ -72,7 +74,7 @@ public class GUI_DataEntry extends Frame{
 
     private int IMG_HEIGHT;
     private int IMG_WIDTH;
-    private int choice;
+    private JLabel choice;
 
     public boolean showDialogs;
     public JTextField category;
@@ -95,49 +97,64 @@ public class GUI_DataEntry extends Frame{
 	}
 
 	public GUI_DataEntry() {
-		initialize();
+		file = null;
+		showDialogs = true;
+		IMG_WIDTH = 800;
+        IMG_HEIGHT = 800;
+        categoryName = "";
+        
+        try {
+			sdb = new AmazonSimpleDBClient(new PropertiesCredentials(
+			        GUI_DataEntry.class.getResourceAsStream("AwsCredentials.properties")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		frame = new JFrame();
+		
+		category = new JTextField();
+		imageName = new JTextField();
+		
+		lblUploadWordsInto = new JLabel("Upload Words Into MossTalk");
+		lblWord = new JLabel("Word");
+		lblSelectImage = new JLabel("Select Image");
+		flagImage = new JLabel("");
+		lblCategory = new JLabel("Category");
+		lblFrequency = new JLabel("Frequency");
+		lblImageability = new JLabel("Imageability");
+		jlblimage = new JLabel();
+		choice = new JLabel("-1");
+		
+		frequencyList = new JComboBox<String>();
+		imageabilityList = new JComboBox<String>();
+		categoryList = new JComboBox<String>();
+
+		btnUploadImage = new JButton("Upload Image");
+		lblOrEnterNew = new JButton("Enter New Category");
+		fileChooser = new JButton("Browse..");
+
+		initializeContents();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
-		file = null;
-		showDialogs = true;
-		choice = -1;
-        try {
-			sdb = new AmazonSimpleDBClient(new PropertiesCredentials(
-			        GUI_DataEntry.class.getResourceAsStream("AwsCredentials.properties")));
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-        
-        IMG_WIDTH = 800;
-        IMG_HEIGHT = 800;
-        
-        categoryName = "";
-		frame = new JFrame();
+	private void initializeContents() {
+		
 		frame.setBounds(10, 0, 462, 350);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		lblUploadWordsInto = new JLabel("Upload Words Into MossTalk");
 		lblUploadWordsInto.setBounds(135, 5, 180, 16);
 		lblUploadWordsInto.setHorizontalAlignment(SwingConstants.CENTER);
 		frame.getContentPane().add(lblUploadWordsInto);
 		
-		lblWord = new JLabel("Word");
 		lblWord.setBounds(63, 46, 61, 16);
 		frame.getContentPane().add(lblWord);
 		
-		lblSelectImage = new JLabel("Select Image");
 		lblSelectImage.setBounds(63, 166, 86, 16);
 		frame.getContentPane().add(lblSelectImage);
 		
-		fileChooser = new JButton("Browse..");
-		flagImage = new JLabel("");
 		flagImage.setVisible(false);
-		
 		flagImage.addPropertyChangeListener(new PropertyChangeListener() {
 
             @Override
@@ -152,36 +169,31 @@ public class GUI_DataEntry extends Frame{
 		
 		fileChooser.setBounds(161, 161, 86, 28);
 		frame.getContentPane().add(fileChooser);
-		
 		fileChooser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 					getFile();
 			}
 		});
 		
-		lblCategory = new JLabel("Category");
 		lblCategory.setBounds(63, 89, 61, 16);
 		frame.getContentPane().add(lblCategory);
+
 		
-		lblFrequency = new JLabel("Frequency");
 		lblFrequency.setBounds(63, 206, 86, 16);
 		frame.getContentPane().add(lblFrequency);
 		
-		lblImageability = new JLabel("Imageability");
 		lblImageability.setBounds(63, 247, 97, 16);
 		frame.getContentPane().add(lblImageability);
 		
-		jlblimage = new JLabel();
 		jlblimage.setBounds(320, 24, 225, 178);
 		frame.getContentPane().add(jlblimage);
 		
-		categoryList = new JComboBox<String>();
+		categories=new ArrayList<String>();
+        categoryList.addItem("");
+        
         String selectExpression = "select Category from `" + "mosswords" + "`";
         System.out.println("Selecting: " + selectExpression + "\n");
         SelectRequest selectRequest = new SelectRequest(selectExpression);
-
-        categories=new ArrayList<String>();
-        categoryList.addItem("");
         for(Item item: sdb.select(selectRequest).getItems()) {
         	for(Attribute attribute: item.getAttributes()) {
         		if(attribute.getName().equals("Category"))
@@ -191,12 +203,11 @@ public class GUI_DataEntry extends Frame{
         			}
         	}
         }
-        
+		
         categoryList.setSelectedIndex(0);
 		categoryList.setBounds(161, 83, 160, 30);
 		frame.getContentPane().add(categoryList);  
 				
-		category = new JTextField();
 		category.setBounds(161, 125, 154, 28);
 		frame.getContentPane().add(category);
 		category.setVisible(false);
@@ -204,12 +215,10 @@ public class GUI_DataEntry extends Frame{
 		category.setText("");
 
 		
-		imageName = new JTextField();
 		imageName.setBounds(163, 40, 146, 28);
 		frame.getContentPane().add(imageName);
 		imageName.setColumns(10);
 		
-		frequencyList = new JComboBox<String>();
 		frequencyList.setBounds(161, 200, 160, 30);
 		frequencyList.addItem("");
 	/*	for(int i=1; i<=10; i++)
@@ -218,7 +227,6 @@ public class GUI_DataEntry extends Frame{
 		frequencyList.addItem("high");
 		frame.getContentPane().add(frequencyList);
 		
-		imageabilityList = new JComboBox<String>();
 		imageabilityList.setBounds(161, 241, 160, 30);
 		imageabilityList.addItem("");
 	/*	for(int i=1; i<=10; i++)
@@ -227,18 +235,15 @@ public class GUI_DataEntry extends Frame{
 		imageabilityList.addItem("high");
 		frame.getContentPane().add(imageabilityList);
 		
-		btnUploadImage = new JButton("Upload Image");
         btnUploadImage.setBounds(116, 283, 117, 29);
 		frame.getContentPane().add(btnUploadImage);
-		
-		lblOrEnterNew = new JButton("Enter New Category");
+
 		lblOrEnterNew.setBounds(21, 129, 129, 22);
 		frame.getContentPane().add(lblOrEnterNew);
 		
 		JLabel lblOr = new JLabel("Or");
 		lblOr.setBounds(77, 108, 15, 16);
 		frame.getContentPane().add(lblOr);
-		
 		lblOrEnterNew.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent e) {
 				category.setVisible(true);
@@ -248,8 +253,6 @@ public class GUI_DataEntry extends Frame{
 		btnUploadImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				word = imageName.getText();
-			//	frequency = Integer.toString(frequencyList.getSelectedIndex()+1);
-			//	imageability = Integer.toString(imageabilityList.getSelectedIndex()+1);
 				frequency = (String) frequencyList.getSelectedItem();
 				imageability = (String) imageabilityList.getSelectedItem();
 				uploadToSimpleDB();		
@@ -396,42 +399,26 @@ public class GUI_DataEntry extends Frame{
 	
 	    for(Item item: sdb.select(selectRequest).getItems()) {
 	    	if(item.getName().equals(word)) {
-	    		
-	    		url = "https://s3.amazonaws.com/"+"mosswords"+"/Images/"+categoryName+"/"+word+".jpg";
-	    		
-	    	// DisplayExistingImage display = new DisplayExistingImage(item);
-	    		showImageForReview(item);
-	  /*  		
-	    		System.out.println("exists");
-	    		Object[] options = {"No, use the older one","Yes, replace"};
-	    		if(showDialogs) {
-					int choice = JOptionPane.showOptionDialog(frame, "Image Name already exists","Replace Image?", 
-							JOptionPane.YES_NO_CANCEL_OPTION,
-						    JOptionPane.QUESTION_MESSAGE,
-						    null,
-						    options,
-						    options[1]);
-					System.out.println(choice); */
-					
-	    		if(choice == 0){
-	    				return false;
-					}
-	    													
-	    		return true;
+    			showImageForReview(item);
+    			
+	    	/*	if(choice == 0)
+    				return false;
+	    		else
+	    			return true;	*/
 	    	}
 	    }
 	    return true;
 	}
 	
 	public void showImageForReview(Item item) {
-		imageFrame = new JFrame();
+		imageFrame = new JPanel();
 		imageFrame.setBounds(50, 50, 600, 400);
-		imageFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		imageFrame.setAlwaysOnTop(true);
+
+		imageFrame.setVisible(true);
 		imageFrame.setLayout(null);
+		imageFrame.requestFocus();
 		
 		BufferedImage bi;
-		try {
 			
 			JLabel heading = new JLabel("Image with the following properties already exists in the database");
 			heading.setFont(new Font("Serif", Font.BOLD, 18));
@@ -441,45 +428,46 @@ public class GUI_DataEntry extends Frame{
 			JLabel imageNameLabel = new JLabel("Image Name:");
 			imageNameLabel.setBounds(63, 86, 161, 36);
 			imageNameLabel.setFont(new Font("Arial", Font.BOLD, 13));
-			imageFrame.getContentPane().add(imageNameLabel);
+			imageFrame.add(imageNameLabel);
 			
 			JLabel imageName = new JLabel(word);
 			imageName.setBounds(165, 86, 161, 36);
-			imageFrame.getContentPane().add(imageName);
+			imageFrame.add(imageName);
 			
 			System.out.println("Category "+getAttributeValue(item, "Category"));
 			
 			JLabel categoryLabel = new JLabel("Category:");
 			categoryLabel.setBounds(63, 106, 161, 36);
 			categoryLabel.setFont(new Font("Arial", Font.BOLD, 13));
-			imageFrame.getContentPane().add(categoryLabel);
+			imageFrame.add(categoryLabel);
 			
 			JLabel category = new JLabel(getAttributeValue(item, "Category"));
 			category.setBounds(165, 106, 161, 36);
-			imageFrame.getContentPane().add(category);
+			imageFrame.add(category);
 			
 			System.out.println("Frequency: "+getAttributeValue(item, "Frequency"));
 
 			JLabel freqLabel = new JLabel("Image Name:");
 			freqLabel.setBounds(63, 126, 161, 36);
 			freqLabel.setFont(new Font("Arial", Font.BOLD, 13));
-			imageFrame.getContentPane().add(freqLabel);
+			imageFrame.add(freqLabel);
 			
 			JLabel frequency = new JLabel(getAttributeValue(item, "Frequency"));
 			frequency.setBounds(165, 126, 161, 36);
-			imageFrame.getContentPane().add(frequency);
+			imageFrame.add(frequency);
 			
 			JLabel imageabilityLabel = new JLabel("Image Name:");
 			imageabilityLabel.setBounds(63, 146, 161, 36);
 			imageabilityLabel.setFont(new Font("Arial", Font.BOLD, 13));
-			imageFrame.getContentPane().add(imageabilityLabel);
+			imageFrame.add(imageabilityLabel);
 			
 			JLabel imageability = new JLabel(getAttributeValue(item, "Imageability"));
 			imageability.setBounds(165, 146, 161, 36);
-			imageFrame.getContentPane().add(imageability);
+			imageFrame.add(imageability);
 			
-	System.out.println("URL Value:"+getAttributeValue(item,"URL"));
-			
+			System.out.println("URL Value:"+getAttributeValue(item,"URL"));
+			try {
+				
 			URL imageURL = new URL(getAttributeValue(item,"URL"));
 			URLConnection connection = imageURL.openConnection();
 			connection.setRequestProperty("User-Agent", "xxxxxx");
@@ -488,35 +476,33 @@ public class GUI_DataEntry extends Frame{
 			jlblimage.setIcon(icon);
 			jlblimage.setBounds(300, 75, 200, 200);
 			imageFrame.add(jlblimage);
-			
+			}
+			catch (Exception e) {
+				System.out.println("here "+e);
+			}
 			JButton replaceButton = new JButton("Replace Original");
 			replaceButton.setBounds(15, 206, 140, 25);
-			imageFrame.getContentPane().add(replaceButton);
+			imageFrame.add(replaceButton);
 			
 			JButton useExistingButton = new JButton("Use Existing");
 			useExistingButton.setBounds(150, 206, 140, 25);
-			imageFrame.getContentPane().add(useExistingButton);
+			imageFrame.add(useExistingButton);
 			
 			imageFrame.setVisible(true);
 
 			replaceButton.addActionListener(new ActionListener (){
 				public void actionPerformed(ActionEvent e) {
-					choice = 1;
-					imageFrame.dispose();	
+					choice.setText("1");
 				}	
 			});
 			
 			useExistingButton.addActionListener(new ActionListener (){
 				public void actionPerformed(ActionEvent e) {
-					choice = 0;
-					imageFrame.dispose();			
+					choice.setText("0");
 				}	
 			});
 			
-		}
-		catch (Exception e) {
-			System.out.println("here "+e);
-		}
+		
 						
 	}
 

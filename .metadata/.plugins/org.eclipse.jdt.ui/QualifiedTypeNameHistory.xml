@@ -55,4 +55,5 @@
 <fullyQualifiedTypeName name="java.awt.Frame"/>
 <fullyQualifiedTypeName name="java.awt.Font"/>
 <fullyQualifiedTypeName name="javax.swing.JButton"/>
+<fullyQualifiedTypeName name="javax.swing.JInternalFrame"/>
 </qualifiedTypeNameHistroy>
