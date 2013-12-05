@@ -6,3 +6,4 @@
 1384760340290	Rename type 'UploadToS3'
 1384762320967	Delete element
 1384816830336	Rename type 'UploadToSimpleDBTest'
+1385247812687	Rename local variable 'imagePanel'

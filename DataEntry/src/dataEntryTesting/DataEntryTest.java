@@ -210,4 +210,20 @@ public class DataEntryTest {
 		fc.frame2.dispose();
 	}
 	
+	@Test
+	public void testShowImageForReview() {
+		GUI_DataEntry gde = new GUI_DataEntry();
+		gde.word = "Cup";
+		gde.categoryName = "NonLiving";
+		String selectExpression = "select * from `" + "mosswords" + "` where itemName() = '"+gde.word+"'";
+	    SelectRequest selectRequest = new SelectRequest(selectExpression);
+	
+	    for(Item item: sdb.select(selectRequest).getItems()) {
+	    	if(item.getName().equals(gde.word)) {
+	    		gde.showImageForReview(item);
+	    	}
+	    while(true){}
+	    }
+	}
+	
 }

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><testrun name="Rerun dataEntryTesting.UploadToSimpleDBTest" project="DataEntry" tests="3" started="3" failures="0" errors="0" ignored="0">
-  <testsuite name="dataEntryTesting.UploadToSimpleDBTest" time="3.789">
-    <testcase name="uploadImageData" classname="dataEntryTesting.UploadToSimpleDBTest" time="1.851"/>
-    <testcase name="testImageNameEmpty" classname="dataEntryTesting.UploadToSimpleDBTest" time="1.787"/>
-    <testcase name="testImageNameValid" classname="dataEntryTesting.UploadToSimpleDBTest" time="0.151"/>
-  </testsuite>
-</testrun>
