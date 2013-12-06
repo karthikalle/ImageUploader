@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/ImageUploader/src/dataEntry/FileChooser.java"/>
+<listEntry value="/DataUploader/src/dataEntry/FileChooser.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="dataEntry.FileChooser"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ImageUploader"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="DataUploader"/>
 </launchConfiguration>
