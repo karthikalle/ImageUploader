@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="Rerun dataEntryTesting.DisplayExistingTest" project="DataEntry" tests="8" started="8" failures="0" errors="0" ignored="0">
+  <testsuite name="dataEntryTesting.DisplayExistingTest" time="7.598">
+    <testcase name="testShowImageForReview" classname="dataEntryTesting.DisplayExistingTest" time="4.155"/>
+    <testcase name="testReplaceImage" classname="dataEntryTesting.DisplayExistingTest" time="0.583"/>
+    <testcase name="testUseExistingImage" classname="dataEntryTesting.DisplayExistingTest" time="0.482"/>
+    <testcase name="testGetCategoryValue" classname="dataEntryTesting.DisplayExistingTest" time="0.562"/>
+    <testcase name="testGetFrequencyValue" classname="dataEntryTesting.DisplayExistingTest" time="0.502"/>
+    <testcase name="testGetImageabilityValue" classname="dataEntryTesting.DisplayExistingTest" time="0.505"/>
+    <testcase name="testGetLevelValue" classname="dataEntryTesting.DisplayExistingTest" time="0.465"/>
+    <testcase name="testGetURLValue" classname="dataEntryTesting.DisplayExistingTest" time="0.344"/>
+  </testsuite>
+</testrun>

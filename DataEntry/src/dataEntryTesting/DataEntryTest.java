@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,8 +21,6 @@ import com.amazonaws.services.simpledb.AmazonSimpleDBClient;
 
 import dataEntry.FileChooser;
 import dataEntry.GUI_DataEntry;
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 public class DataEntryTest {
 	
@@ -44,6 +41,7 @@ public class DataEntryTest {
 	@Test
 	public void uploadImageData() {
 		
+			@SuppressWarnings("serial")
 			GUI_DataEntry gde = new GUI_DataEntry(){
 				public boolean validateAndGetCategory() {
 					return true;
@@ -51,7 +49,7 @@ public class DataEntryTest {
 				public boolean validateImageName(){
 					return true;
 				}
-				public boolean checkIfAlreadyExistsAndReplace() {
+				public boolean checkIfExistsAndSeekReplace() {
 					return true;
 				}
 				public String uploadImageToS3(){
@@ -62,10 +60,10 @@ public class DataEntryTest {
 			
 			gde.showDialogs=false;
 			gde.word = imageName;	
-			gde.frequency = "4";
-			gde.imageability = "6";
+			gde.frequency = "high";
+			gde.imageability = "low";
 			gde.categoryName= "testCategory";
-			gde.uploadToSimpleDB();
+			gde.validateUpload();
 			
 			String selectExpression = "select * from `" + "mossWords" + "` where itemName() = '"+imageName+"'";
 		    SelectRequest selectRequest = new SelectRequest(selectExpression);
@@ -103,7 +101,8 @@ public class DataEntryTest {
 		GUI_DataEntry gde = new GUI_DataEntry();
 		gde.word = "Cup";
 		gde.showDialogs=false;		
-		assertTrue(gde.checkIfAlreadyExistsAndReplace());
+		assertTrue(gde.checkIfExistsAndSeekReplace());
+		gde.displayExisting.dispose();
 		gde.frame.dispose();
 	}
 	
@@ -118,20 +117,22 @@ public class DataEntryTest {
 	
 	@Test
 	public void testUploadImageToS3() {
+		@SuppressWarnings("serial")
 		GUI_DataEntry gde = new GUI_DataEntry(){
 			public String validateFile() {
-				return "/Users/karthikalle/Desktop/testimages/cup_of_coffee_on_dish.png";
+				return "/Users/karthikalle/Desktop/testimages/Cap.png";
 			}
 		};
-		gde.word = "Cup";
-		gde.categoryName = "testCategory";
+		gde.word = "Cap";
+		gde.categoryName = "NonLiving";
 		gde.showDialogs = false;
-		assertEquals("https://s3.amazonaws.com/mosswords/testCategory/Cup.jpg",gde.uploadImageToS3());
+		assertEquals("https://s3.amazonaws.com/mosswords/Images/NonLiving/Cap.jpg",gde.uploadImageToS3());
 		gde.frame.dispose();
 	}
 	
 	@Test
 	public void testFileIsNull() {
+		@SuppressWarnings("serial")
 		GUI_DataEntry gde = new GUI_DataEntry(){
 			public String validateFile() {
 				return null;
@@ -142,7 +143,7 @@ public class DataEntryTest {
 		    public boolean validateAndGetCategory(){
 		    	return true;
 		    }
-			public boolean checkIfAlreadyExistsAndReplace() {
+			public boolean checkIfExistsAndSeekReplace() {
 				return true;
 			}
 		};
@@ -152,7 +153,7 @@ public class DataEntryTest {
 		gde.word = imageName;
 		gde.categoryName = "testCategory";
 		gde.showDialogs = false;
-		gde.uploadToSimpleDB();
+		gde.validateUpload();
 	
 		String selectExpression = "select * from `" + "mossWords" + 
 					"` where itemName() = '"+imageName+"'";
@@ -169,6 +170,7 @@ public class DataEntryTest {
 	@Test
 	public void testNoFileSelected() {
 		
+		@SuppressWarnings("serial")
 		GUI_DataEntry gde = new GUI_DataEntry(){
 			public void getFile() {
 				FileChooser fcp = new FileChooser(800,800);
@@ -177,7 +179,7 @@ public class DataEntryTest {
 			}
 		};
 		gde.fileChooser.setSelected(true);
-		
+		gde.showDialogs=false;		
 		assertEquals("",GUI_DataEntry.flagImage.getText());
 		gde.frame.dispose();
 	}
@@ -210,20 +212,55 @@ public class DataEntryTest {
 		fc.frame2.dispose();
 	}
 	
-	@Test
-	public void testShowImageForReview() {
+public void testComputeLengthShort() {
 		GUI_DataEntry gde = new GUI_DataEntry();
 		gde.word = "Cup";
-		gde.categoryName = "NonLiving";
-		String selectExpression = "select * from `" + "mosswords" + "` where itemName() = '"+gde.word+"'";
-	    SelectRequest selectRequest = new SelectRequest(selectExpression);
+		String length = GUI_DataEntry.computeLength(gde.word);
+		assertEquals("short", length);
+	}
 	
-	    for(Item item: sdb.select(selectRequest).getItems()) {
-	    	if(item.getName().equals(gde.word)) {
-	    		gde.showImageForReview(item);
-	    	}
-	    while(true){}
-	    }
+	@Test
+	public void testComputeLengthLong() {
+		GUI_DataEntry gde = new GUI_DataEntry();
+		gde.word = "Crocodile";
+		String length = GUI_DataEntry.computeLength(gde.word);
+		assertEquals("long", length);
+	}
+	
+	@Test
+	public void testComputeLevel1() {
+		GUI_DataEntry gde = new GUI_DataEntry();
+		gde.word = "Cup";
+		gde.frequency = "high";
+		String length = GUI_DataEntry.computeLength(gde.word);
+		assertEquals("1", GUI_DataEntry.computeLevel(gde.frequency, length));
+	}
+	
+	@Test
+	public void testComputeLevel2() {
+		GUI_DataEntry gde = new GUI_DataEntry();
+		gde.word = "Cap";
+		gde.frequency = "low";
+		String length = GUI_DataEntry.computeLength(gde.word);
+		assertEquals("2", GUI_DataEntry.computeLevel(gde.frequency, length));
+	}
+	
+	@Test
+	public void testComputeLevel3() {
+		GUI_DataEntry gde = new GUI_DataEntry();
+		gde.word = "Crocodile";
+		gde.frequency = "high";
+		String length = GUI_DataEntry.computeLength(gde.word);
+		assertEquals("3", GUI_DataEntry.computeLevel(gde.frequency, length));
+	}
+	
+	@Test
+	public void testComputeLevel4() {
+		GUI_DataEntry gde = new GUI_DataEntry();
+		gde.word = "Basketball";
+		gde.frequency = "low";
+		String length = GUI_DataEntry.computeLength(gde.word);
+		assertEquals("4", GUI_DataEntry.computeLevel(gde.frequency, length));
 	}
 	
 }

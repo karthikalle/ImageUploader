@@ -87,9 +87,10 @@ public class FileChooser {
     }
     
     public boolean reScaleImage(File file) {
+    	if(file == null)
+    		return false;
     	try {
 			BufferedImage originalImage = ImageIO.read(file);		
-			
 			int originalWidth = originalImage.getWidth();
 			int originalHeight = originalImage.getHeight();
 			

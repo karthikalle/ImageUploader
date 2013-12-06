@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="Rerun dataEntryTesting.DisplayExistingTest" project="DataEntry" tests="3" started="3" failures="0" errors="0" ignored="0">
+  <testsuite name="dataEntryTesting.DisplayExistingTest" time="5.88">
+    <testcase name="testShowImageForReview" classname="dataEntryTesting.DisplayExistingTest" time="4.75"/>
+    <testcase name="testReplaceImage" classname="dataEntryTesting.DisplayExistingTest" time="0.646"/>
+    <testcase name="testUseExistingImage" classname="dataEntryTesting.DisplayExistingTest" time="0.484"/>
+  </testsuite>
+</testrun>
