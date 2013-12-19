@@ -41,7 +41,6 @@
 <fullyQualifiedTypeName name="java.awt.event.MouseAdapter"/>
 <fullyQualifiedTypeName name="com.amazonaws.services.simpledb.model.SelectRequest"/>
 <fullyQualifiedTypeName name="com.amazonaws.services.simpledb.AmazonSimpleDB"/>
-<fullyQualifiedTypeName name="org.junit.Before"/>
 <fullyQualifiedTypeName name="com.amazonaws.auth.PropertiesCredentials"/>
 <fullyQualifiedTypeName name="junit.framework.Assert"/>
 <fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
@@ -57,4 +56,5 @@
 <fullyQualifiedTypeName name="javax.swing.JButton"/>
 <fullyQualifiedTypeName name="java.awt.Event"/>
 <fullyQualifiedTypeName name="javax.swing.Action"/>
+<fullyQualifiedTypeName name="org.junit.Before"/>
 </qualifiedTypeNameHistroy>

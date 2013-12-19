@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.google.gdt.eclipse.designer.junitGwtLaunchConfigurationType">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/DataUploader"/>
+<listEntry value="/ImageUploader"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="4"/>
@@ -9,7 +9,7 @@
 <stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value=""/>
 <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
 <stringAttribute key="org.eclipse.jdt.junit.TEST_KIND" value="org.eclipse.jdt.junit.loader.junit4"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="dataEntryTesting.AssemblyTestCase"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="DataUploader"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="imageUploaderTesting.AssemblyTestCase"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ImageUploader"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx256m"/>
 </launchConfiguration>
